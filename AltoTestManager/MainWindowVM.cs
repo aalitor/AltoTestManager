@@ -127,19 +127,6 @@ namespace AltoTestManager
             object missing = System.Reflection.Missing.Value;
             Office.Word.Document document = ap.Documents.Add(ref missing, ref missing, ref missing, ref missing);
             //document.InlineShapes.AddPicture(@"C:\Users\ermcnnj\Desktop\apple.png");
-            String read = string.Empty;
-            List<string> data = new List<string>();
-            for (int i = 0; i < document.Paragraphs.Count; i++)
-            {
-                string temp = document.Paragraphs[i + 1].Range.Text.Trim();
-                if (temp != string.Empty && temp.Contains("Apple"))
-                {
-                    var pPicture = document.Paragraphs.Add();
-                    pPicture.Format.SpaceAfter = 10f;
-                    document.InlineShapes.AddPicture(@"C:\Users\ermcnnj\Desktop\apple.png", Range: pPicture.Range);
-                }
-
-            }
             var num = 1;
             foreach (var item in proj.TestCases)
             {
