@@ -9,9 +9,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
+using Office = Microsoft.Office.Interop;
+using MessageBox = System.Windows.MessageBox;
 namespace AltoTestManager
 {
     class MainWindowVM : INotifyPropertyChanged
@@ -26,7 +28,8 @@ namespace AltoTestManager
         private ImageSource imageSource;
         public RelayCommand CommandDeleteSelectedImagePath { get; set; }
         public RelayCommand CommandDeleteSelectedTestCase { get; set; }
-
+        public RelayCommand CommandGetImageFromClipboard { get; set; }
+        public RelayCommand CommandExportTestProjectWord { get; set; }
         public ImageSource ImgSource
         {
             get { return imageSource; }
@@ -96,9 +99,83 @@ namespace AltoTestManager
             CommandAddNewTestProject = new RelayCommand(new Action<object>(addNewTestProject));
             CommandDeleteSelectedImagePath = new RelayCommand(new Action<object>(deleteSelectedImagePath));
             CommandDeleteSelectedTestCase = new RelayCommand(new Action<object>(deleteSelectedTestCase));
+            CommandGetImageFromClipboard = new RelayCommand(new Action<object>(getImageFromClipboard));
+            CommandExportTestProjectWord = new RelayCommand(new Action<object>(exportTestProjectWord));
             readJson();
             if (TestProjects == null)
                 TestProjects = new ObservableCollection<TestProject>();
+        }
+
+        private void exportTestProjectWord(object obj)
+        {
+            if (obj == null || !(obj is TestProject))
+                return;
+
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Word Document (*.docx) | *.docx";
+            var filename = "";
+            if(dialog.ShowDialog() == DialogResult.OK)
+            {
+                filename = dialog.FileName;
+            }
+            else
+            {
+                return;
+            }
+            var proj = (TestProject)obj;
+            Office.Word.Application ap = new Office.Word.Application();
+            object missing = System.Reflection.Missing.Value;
+            Office.Word.Document document = ap.Documents.Add(ref missing, ref missing, ref missing, ref missing);
+            //document.InlineShapes.AddPicture(@"C:\Users\ermcnnj\Desktop\apple.png");
+            String read = string.Empty;
+            List<string> data = new List<string>();
+            for (int i = 0; i < document.Paragraphs.Count; i++)
+            {
+                string temp = document.Paragraphs[i + 1].Range.Text.Trim();
+                if (temp != string.Empty && temp.Contains("Apple"))
+                {
+                    var pPicture = document.Paragraphs.Add();
+                    pPicture.Format.SpaceAfter = 10f;
+                    document.InlineShapes.AddPicture(@"C:\Users\ermcnnj\Desktop\apple.png", Range: pPicture.Range);
+                }
+
+            }
+            var num = 1;
+            foreach (var item in proj.TestCases)
+            {
+                Microsoft.Office.Interop.Word.Paragraph para1 = document.Content.Paragraphs.Add(ref missing);
+                para1.Range.Text = string.Format("{0}. {1}", num++, item.Description);
+                para1.Range.InsertParagraphAfter();
+                foreach (var pic in item.ImagePaths)
+                {
+                    para1.Range.InlineShapes.AddPicture(pic);
+                }
+                document.Paragraphs.Add(para1);
+            }
+            document.SaveAs2(filename);
+            ((Microsoft.Office.Interop.Word._Document)document).Close();
+            document = null;
+            ((Microsoft.Office.Interop.Word._Application)ap).Quit(ref missing,ref missing, ref missing);
+            ap = null;
+        }
+
+        private void getImageFromClipboard(object obj)
+        {
+            if (System.Windows.Clipboard.ContainsImage())
+            {
+                // ImageUIElement.Source = Clipboard.GetImage(); // does not work
+                System.Windows.Forms.IDataObject clipboardData = System.Windows.Forms.Clipboard.GetDataObject();
+                if (clipboardData != null)
+                {
+                    if (clipboardData.GetDataPresent(System.Windows.Forms.DataFormats.Bitmap))
+                    {
+                        System.Drawing.Bitmap bitmap = (System.Drawing.Bitmap)clipboardData.GetData(System.Windows.Forms.DataFormats.Bitmap);
+                        addNewImage(
+                            System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()));
+
+                    }
+                }
+            }
         }
 
         private void deleteSelectedTestCase(object obj)
@@ -142,12 +219,12 @@ namespace AltoTestManager
             if (parameter is string)
             {
                 var caseDesc = (string)parameter;
-                if(string.IsNullOrEmpty(caseDesc))
+                if (string.IsNullOrEmpty(caseDesc))
                 {
                     MessageBox.Show("Test senaryosu için açıklama giriniz!");
                     return;
                 }
-                if (SelectedProject != null && 
+                if (SelectedProject != null &&
                     SelectedProject.TestCases != null &&
                     SelectedProject.TestCases.Any(x => x.Description == caseDesc))
                 {
@@ -159,7 +236,7 @@ namespace AltoTestManager
                 saveJson();
             }
         }
-        public void AddNewImage(ImageSource img)
+        public void addNewImage(ImageSource img)
         {
             if (SelectedProject != null && SelectedTestCase != null)
             {

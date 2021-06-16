@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         
         xmlns:local="clr-namespace:AltoTestManager"
-        Title="MainWindow" Height="600" Width="700" KeyDown="Window_KeyDown">
+        Title="MainWindow" Height="600" Width="700">
     <Window.Resources>
 
         <local:ImageNullConverter x:Key="ImageNullConverter"/>
@@ -26,9 +26,14 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="1" Padding="2" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1">
-                        <ComboBox SelectedItem="{Binding SelectedProject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding TestProjects}" DisplayMemberPath="Caption" ></ComboBox>
-                    </Border>
+                    <DockPanel LastChildFill="True">
+                        <Button Command="{Binding CommandExportTestProjectWord}" 
+                                CommandParameter="{Binding SelectedProject}" DockPanel.Dock="Right" Height="25" Content="Worde Çıkart" />
+                        <Border Grid.Row="1" Padding="2" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1">
+                            <ComboBox  SelectedItem="{Binding SelectedProject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding TestProjects}" DisplayMemberPath="Caption" ></ComboBox>
+                        </Border>
+                    </DockPanel>
+                    
                     <ListView Grid.Row="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" SelectedItem="{Binding SelectedTestCase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Wheat" x:Name="testCaseListView" ItemsSource="{Binding SelectedProject.TestCases}">
                         <ListView.Template>
                             <ControlTemplate>
@@ -92,6 +97,7 @@
                 <Grid Margin="10,0,0,0" Grid.Column="1">
                     <Grid.RowDefinitions>
                         <RowDefinition />
+                        <RowDefinition Height="30" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Border Margin="0,5,10,5" Background="Transparent" BorderBrush="Black" BorderThickness="1">
@@ -102,7 +108,8 @@
                             </Image.Source>
                         </Image>
                     </Border>
-                    <GroupBox  Grid.Row="1" Header="Görseller">
+                    <Button Grid.Row="1" Command="{Binding CommandGetImageFromClipboard}" CommandParameter="{x:Null}" Content="Görseli Panodan Al" />
+                    <GroupBox  Grid.Row="2" Header="Görseller">
                         <ListView x:Name="listv"  Margin="0,5,4,0"  ScrollViewer.CanContentScroll="True" SelectedItem="{Binding SelectedImagePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Wheat"  ItemsSource="{Binding SelectedTestCase.ImagePaths}">
                             <ListView.Template>
                                 <ControlTemplate>
@@ -114,9 +121,10 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <DockPanel LastChildFill="True">
-                                        <Border HorizontalAlignment="Right">
-                                            <Button VerticalAlignment="Center" Content="Sil" HorizontalAlignment="Right" Width="20" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedImagePath}" CommandParameter="{Binding}" />
-                                        </Border>
+                                        <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Sil" HorizontalAlignment="Right" Width="20" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedImagePath}" CommandParameter="{Binding}" />
+                                        <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Büyüt" HorizontalAlignment="Right" Width="50" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedImagePath}" CommandParameter="{Binding}" />
+                                        <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Kopyala" HorizontalAlignment="Right" Width="50" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedImagePath}" CommandParameter="{Binding}" />
+
                                         <Border VerticalAlignment="Center">
                                             <TextBlock   VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Text="{Binding}" Height="20" ></TextBlock>
                                         </Border>
