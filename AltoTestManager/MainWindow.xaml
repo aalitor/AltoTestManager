@@ -1,13 +1,14 @@
 ﻿<Window x:Name="wm" x:Class="AltoTestManager.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        
+        xmlns:conv="clr-namespace:AltoTestManager.Converters"
         xmlns:local="clr-namespace:AltoTestManager"
         Title="MainWindow" Height="600" Width="700">
     <Window.Resources>
-
+        <local:SelectedProjectToEnabledConverter x:Key="SelectedProjectToEnabledConverter"/>
         <local:ImageNullConverter x:Key="ImageNullConverter"/>
         <local:StringToImageSourceConverter x:Key="StringToImageSourceConverter" />
+        <conv:NotificationTypeToBorderColorConverter x:Key="NotificationTypeToBorderColorConverter" />
     </Window.Resources>
     <TabControl>
         <TabItem Header="Test Senaryoları">
@@ -23,8 +24,9 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*" />
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <DockPanel LastChildFill="True">
                         <Button Command="{Binding CommandExportTestProjectWord}" 
@@ -33,7 +35,7 @@
                             <ComboBox  SelectedItem="{Binding SelectedProject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding TestProjects}" DisplayMemberPath="Caption" ></ComboBox>
                         </Border>
                     </DockPanel>
-                    
+
                     <ListView Grid.Row="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" SelectedItem="{Binding SelectedTestCase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Wheat" x:Name="testCaseListView" ItemsSource="{Binding SelectedProject.TestCases}">
                         <ListView.Template>
                             <ControlTemplate>
@@ -84,15 +86,47 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <GroupBox VerticalAlignment="Bottom" Grid.Row="3" Header="Test Senaryosu Ekle">
+                    <GroupBox IsEnabled="{Binding SelectedProject, Converter={StaticResource SelectedProjectToEnabledConverter}}" VerticalAlignment="Bottom" Grid.Row="3" Header="Test Senaryosu Ekle">
                         <StackPanel>
                             <DockPanel Margin="2,5,5,5" LastChildFill="True">
                                 <Label Content="Description:" FontWeight="Bold"></Label>
-                                <TextBox KeyDown="txtCaseDesc_KeyDown"  HorizontalAlignment="Stretch" x:Name="txtCaseDesc" ></TextBox>
+                                <TextBox KeyDown="txtCaseDesc_KeyDown" Text="{Binding ElementName=testCaseListView, Mode=TwoWay, Path=SelectedItem.Description, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" x:Name="txtCaseDesc" ></TextBox>
                             </DockPanel>
-                            <Button x:Name="btnAddNewTestCase" Command="{Binding CommandAddNewTestCase}" CommandParameter="{Binding ElementName=txtCaseDesc, Path=Text}" Width="30" Height="30"  Margin="0,0,5,5" HorizontalAlignment="Right"  FontWeight="Bold" FontSize="20" Content="+" ></Button>
+                            <DockPanel>
+                                <Button Padding="0,-2,0,5" DockPanel.Dock="Right" x:Name="btnAddNewTestCase" Command="{Binding CommandAddNewTestCase}" CommandParameter="{Binding ElementName=txtCaseDesc, Path=Text}" Width="30" Height="30"  Margin="0,0,5,5" HorizontalAlignment="Right"  FontWeight="Bold" FontSize="20" Content="+" ></Button>
+                            </DockPanel>
                         </StackPanel>
                     </GroupBox>
+                    <StatusBar BorderThickness="1" BorderBrush="{Binding Notification.Type, Converter={StaticResource NotificationTypeToBorderColorConverter}, NotifyOnTargetUpdated=True}" Grid.Row="4" Height="30" Background="White">
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Red" Text="{Binding Notification.Text, NotifyOnTargetUpdated=True}" >
+                            <TextBlock.Triggers>
+                                <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.25" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:4" Value="1"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:5" Value="0"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                        
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </TextBlock.Triggers>
+                        </TextBlock>
+                        <StatusBar.Triggers>
+                            <EventTrigger  RoutedEvent="Binding.TargetUpdated">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ThicknessAnimation
+        Storyboard.TargetProperty="BorderThickness"
+        Duration="0:0:7" FillBehavior="HoldEnd" From="1,1,1,1" To="0,0,0,0" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </StatusBar.Triggers>
+                    </StatusBar>
                 </Grid>
                 <Grid Margin="10,0,0,0" Grid.Column="1">
                     <Grid.RowDefinitions>
@@ -120,15 +154,19 @@
                             </ListView.Template>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <DockPanel LastChildFill="True">
-                                        <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Sil" HorizontalAlignment="Right" Width="20" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedImagePath}" CommandParameter="{Binding}" />
-                                        <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Büyüt" HorizontalAlignment="Right" Width="50" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedImagePath}" CommandParameter="{Binding}" />
-                                        <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Kopyala" HorizontalAlignment="Right" Width="50" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedImagePath}" CommandParameter="{Binding}" />
+                                    <Grid>
+                                        <Border Padding="3" HorizontalAlignment="Stretch" BorderBrush="LightBlue" BorderThickness="1">
+                                            <DockPanel LastChildFill="True">
+                                                <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Sil" HorizontalAlignment="Right" Width="20" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedImagePath}" CommandParameter="{Binding}" />
+                                                <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Büyüt" HorizontalAlignment="Right" Width="50" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandShowLargeImageWindow}" CommandParameter="{Binding}" />
+                                                <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Kopyala" HorizontalAlignment="Right" Width="50" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandCopyImageToClipboard}" CommandParameter="{Binding}" />
 
-                                        <Border VerticalAlignment="Center">
-                                            <TextBlock   VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Text="{Binding}" Height="20" ></TextBlock>
+                                                <Border VerticalAlignment="Center">
+                                                    <TextBlock   VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Text="{Binding}" Height="20" ></TextBlock>
+                                                </Border>
+                                            </DockPanel>
                                         </Border>
-                                    </DockPanel>
+                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>

@@ -38,6 +38,7 @@ namespace AltoTestManager
             if (e.Key == Key.Enter)
             {
                 btnAddNewTestCase.Command.Execute(btnAddNewTestCase.CommandParameter);
+                txtCaseDesc.Text = string.Empty;
             }
         }
 

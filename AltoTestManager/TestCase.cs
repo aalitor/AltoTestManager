@@ -10,7 +10,18 @@ namespace AltoTestManager
 {
     class TestCase : INotifyPropertyChanged
     {
-        public string Description { get; set; }
+        private string description;
+
+        public string Description
+        {
+            get { return description; }
+            set
+            {
+                description = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("Description"));
+            }
+        }
+
         public ObservableCollection<string> ImagePaths { get; set; }
 
         private TestCaseStatus caseStatus;
@@ -20,14 +31,14 @@ namespace AltoTestManager
             get { return caseStatus; }
             set
             {
-                if(value != caseStatus)
+                if (value != caseStatus)
                 {
                     caseStatus = value;
                     PropertyChanged(this, new PropertyChangedEventArgs("CaseStatus"));
                 }
             }
         }
-        
+
 
         public TestCase(string description, TestCaseStatus status = TestCaseStatus.Untested)
         {

@@ -18,6 +18,18 @@ namespace AltoTestManager
 {
     class MainWindowVM : INotifyPropertyChanged
     {
+        private Notification notification;
+
+        public Notification Notification
+        {
+            get { return notification; }
+            set
+            {
+                notification = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("Notification"));
+            }
+        }
+
         public ObservableCollection<TestProject> TestProjects { get; set; }
         public RelayCommand CommandChangeTestCase { get; set; }
         public RelayCommand CommandAddNewTestCase { get; set; }
@@ -30,6 +42,9 @@ namespace AltoTestManager
         public RelayCommand CommandDeleteSelectedTestCase { get; set; }
         public RelayCommand CommandGetImageFromClipboard { get; set; }
         public RelayCommand CommandExportTestProjectWord { get; set; }
+        public RelayCommand CommandNewTestCase { get; set; }
+        public RelayCommand CommandCopyImageToClipboard { get; set; }
+        public RelayCommand CommandShowLargeImageWindow { get; set; }
         public ImageSource ImgSource
         {
             get { return imageSource; }
@@ -101,9 +116,50 @@ namespace AltoTestManager
             CommandDeleteSelectedTestCase = new RelayCommand(new Action<object>(deleteSelectedTestCase));
             CommandGetImageFromClipboard = new RelayCommand(new Action<object>(getImageFromClipboard));
             CommandExportTestProjectWord = new RelayCommand(new Action<object>(exportTestProjectWord));
+            CommandNewTestCase = new RelayCommand(new Action<object>(createNewTestCase));
+            CommandCopyImageToClipboard = new RelayCommand(new Action<object>(copyImageToClipboard));
+            CommandShowLargeImageWindow = new RelayCommand(new Action<object>(showLargeImageWindow));
+            Notification = new AltoTestManager.Notification() { Text = "", Type = 0 };
             readJson();
             if (TestProjects == null)
                 TestProjects = new ObservableCollection<TestProject>();
+        }
+
+        private void showLargeImageWindow(object obj)
+        {
+            if (obj is string)
+            {
+                var imgpath = (string)obj;
+                if (!File.Exists(imgpath))
+                {
+                    MessageBox.Show("Görsel bulunamadı");
+                    return;
+                }
+                var largeImageWindow = new LargeImageDisplayerWindow(imgpath);
+                largeImageWindow.ShowDialog();
+            }
+        }
+
+        private void copyImageToClipboard(object obj)
+        {
+            if (obj is string)
+            {
+                var img = (string)obj;
+                if (File.Exists(img))
+                {
+                    System.Windows.Forms.Clipboard.SetImage(Image.FromFile(img));
+                }
+            }
+        }
+
+        private void createNewTestCase(object obj)
+        {
+            if (obj is System.Windows.Controls.ListView)
+            {
+                var lv = (System.Windows.Controls.ListView)obj;
+                lv.SelectedItem = null;
+                lv.SelectedIndex = -1;
+            }
         }
 
         private void exportTestProjectWord(object obj)
@@ -114,7 +170,7 @@ namespace AltoTestManager
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Filter = "Word Document (*.docx) | *.docx";
             var filename = "";
-            if(dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 filename = dialog.FileName;
             }
@@ -142,7 +198,7 @@ namespace AltoTestManager
             document.SaveAs2(filename);
             ((Microsoft.Office.Interop.Word._Document)document).Close();
             document = null;
-            ((Microsoft.Office.Interop.Word._Application)ap).Quit(ref missing,ref missing, ref missing);
+            ((Microsoft.Office.Interop.Word._Application)ap).Quit(ref missing, ref missing, ref missing);
             ap = null;
         }
 
@@ -201,6 +257,7 @@ namespace AltoTestManager
                 saveJson();
             }
         }
+
         void addNewTestCase(object parameter)
         {
             if (parameter is string)
@@ -208,14 +265,16 @@ namespace AltoTestManager
                 var caseDesc = (string)parameter;
                 if (string.IsNullOrEmpty(caseDesc))
                 {
-                    MessageBox.Show("Test senaryosu için açıklama giriniz!");
+                    Notification.Text = "Test senaryosu için açıklama giriniz";
+                    Notification.Type = -1;
                     return;
                 }
                 if (SelectedProject != null &&
                     SelectedProject.TestCases != null &&
                     SelectedProject.TestCases.Any(x => x.Description == caseDesc))
                 {
-                    MessageBox.Show("Aynı açıklamaya ait test senaryosu zaten mevcut!");
+                    Notification.Text = "Aynı açıklamaya ait test senaryosu zaten mevcut!";
+                    Notification.Type = -1;
                     return;
                 }
                 var testcase = new TestCase(caseDesc, TestCaseStatus.Untested);
@@ -263,13 +322,15 @@ namespace AltoTestManager
 
             if (string.IsNullOrEmpty(projname))
             {
-                MessageBox.Show("Proje ismi giriniz");
+                Notification.Text = "Proje ismi giriniz";
+                Notification.Type = -1;
                 return;
             }
 
             if (TestProjects.Any(x => x.Caption.Equals(projname)))
             {
-                MessageBox.Show("Aynı isimli bir proje zaten var, ekleme yapılamaz");
+                Notification.Text = "Aynı isimli bir proje zaten var, ekleme yapılamaz";
+                Notification.Type = -1;
                 return;
             }
             var proj = new TestProject(projname);

@@ -19,3 +19,5 @@ C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestMan
 C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\Newtonsoft.Json.dll
 C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\Newtonsoft.Json.xml
 C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\obj\Debug\AltoTestManager.csproj.ResolveComReference.cache
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\obj\Debug\LargeImageDisplayerWindow.baml
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\obj\Debug\LargeImageDisplayerWindow.g.cs
