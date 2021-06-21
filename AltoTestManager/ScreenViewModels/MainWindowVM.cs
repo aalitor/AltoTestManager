@@ -188,51 +188,60 @@ namespace AltoTestManager
 
         private void exportTestProjectWord(object obj)
         {
-            if (obj == null || !(obj is TestProject))
-                return;
+            try
+            {
 
-            SaveFileDialog dialog = new SaveFileDialog();
-            dialog.Filter = "Word Document (*.docx) | *.docx";
-            var filename = "";
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                filename = dialog.FileName;
-            }
-            else
-            {
-                return;
-            }
-            var proj = (TestProject)obj; 
-            
-            object oMissing = System.Reflection.Missing.Value; object oEndOfDoc = "\\endofdoc";
-            /* \endofdoc is a predefined bookmark */
-            //Start Word and create a new document.    
 
-            Word._Application oWord;
-            Word._Document oDoc = new Word.Document();
-            oWord = new Word.Application();
-            oWord.Visible = false;
-            oDoc = oWord.Documents.Add(ref oMissing, ref oMissing, ref oMissing, ref oMissing);
-            //Insert a paragraph at the beginning of the document.    
-            var num = 1;
-            foreach (var item in proj.TestCases)
-            {
-                Word.Paragraph oPara1;
-                oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
-                oPara1.Range.Text = string.Format("{0}. {1}", num++, item.Description);
-                oPara1.Range.InsertParagraphAfter();
-                foreach (var pic in item.ImagePaths)
+                if (obj == null || !(obj is TestProject))
+                    return;
+
+                SaveFileDialog dialog = new SaveFileDialog();
+                dialog.Filter = "Word Document (*.docx) | *.docx";
+                var filename = "";
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    oPara1.Range.InlineShapes.AddPicture(pic);
+                    filename = dialog.FileName;
                 }
-            }
-            oDoc.SaveAs2(filename);
-            ((Microsoft.Office.Interop.Word._Document)oDoc).Close();
-            oDoc = null;
-            ((Microsoft.Office.Interop.Word._Application)oWord).Quit(ref oMissing, ref oMissing, ref oMissing);
-            oWord = null;
+                else
+                {
+                    return;
+                }
+                var proj = (TestProject)obj;
 
-            MessageBox.Show("Dosya oluşturuldu\r\nDosya Yolu:" + filename);
+                object oMissing = System.Reflection.Missing.Value; object oEndOfDoc = "\\endofdoc";
+                /* \endofdoc is a predefined bookmark */
+                //Start Word and create a new document.    
+
+                Word._Application oWord;
+                Word._Document oDoc = new Word.Document();
+                oWord = new Word.Application();
+                oWord.Visible = false;
+                oDoc = oWord.Documents.Add(ref oMissing, ref oMissing, ref oMissing, ref oMissing);
+                //Insert a paragraph at the beginning of the document.    
+                var num = 1;
+                foreach (var item in proj.TestCases)
+                {
+                    Word.Paragraph oPara1;
+                    oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
+                    oPara1.Range.Text = string.Format("{0}. {1}", num++, item.Description);
+                    oPara1.Range.InsertParagraphAfter();
+                    foreach (var pic in item.ImagePaths)
+                    {
+                        oPara1.Range.InlineShapes.AddPicture(pic);
+                    }
+                }
+                oDoc.SaveAs2(filename);
+                ((Microsoft.Office.Interop.Word._Document)oDoc).Close();
+                oDoc = null;
+                ((Microsoft.Office.Interop.Word._Application)oWord).Quit(ref oMissing, ref oMissing, ref oMissing);
+                oWord = null;
+
+                MessageBox.Show("Dosya oluşturuldu\r\nDosya Yolu:" + filename);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n\r\n" + ex.StackTrace);
+            }
         }
 
         private void getImageFromClipboard(object obj)
