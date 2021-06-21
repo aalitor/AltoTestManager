@@ -230,7 +230,7 @@ namespace AltoTestManager
                         oPara1.Range.InlineShapes.AddPicture(pic);
                     }
                 }
-                oDoc.SaveAs2(filename);
+                oDoc.SaveAs(filename);
                 ((Microsoft.Office.Interop.Word._Document)oDoc).Close();
                 oDoc = null;
                 ((Microsoft.Office.Interop.Word._Application)oWord).Quit(ref oMissing, ref oMissing, ref oMissing);
