@@ -197,15 +197,15 @@ namespace AltoTestManager
 
                 SaveFileDialog dialog = new SaveFileDialog();
                 dialog.Filter = "Word Document (*.docx) | *.docx";
-                var filename = "";
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    filename = dialog.FileName;
-                }
-                else
-                {
-                    return;
-                }
+                //var filename = "";
+                //if (dialog.ShowDialog() == DialogResult.OK)
+                //{
+                //    filename = dialog.FileName;
+                //}
+                //else
+                //{
+                //    return;
+                //}
                 var proj = (TestProject)obj;
 
                 object oMissing = System.Reflection.Missing.Value; object oEndOfDoc = "\\endofdoc";
@@ -229,14 +229,15 @@ namespace AltoTestManager
                     {
                         oPara1.Range.InlineShapes.AddPicture(pic);
                     }
+                    oPara1.Range.InsertParagraphAfter();
                 }
-                oDoc.SaveAs(filename);
-                ((Microsoft.Office.Interop.Word._Document)oDoc).Close();
-                oDoc = null;
-                ((Microsoft.Office.Interop.Word._Application)oWord).Quit(ref oMissing, ref oMissing, ref oMissing);
-                oWord = null;
+                oWord.Visible = true;
 
-                MessageBox.Show("Dosya oluşturuldu\r\nDosya Yolu:" + filename);
+                //oDoc.SaveAs(filename);
+                //((Microsoft.Office.Interop.Word._Document)oDoc).Close();
+                //oDoc = null;
+                //((Microsoft.Office.Interop.Word._Application)oWord).Quit(ref oMissing, ref oMissing, ref oMissing);
+                //oWord = null;
             }
             catch(Exception ex)
             {
