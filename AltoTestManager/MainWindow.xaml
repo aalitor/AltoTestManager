@@ -5,6 +5,11 @@
         xmlns:local="clr-namespace:AltoTestManager"
         Title="MainWindow" Height="600" Width="700"
         xmlns:ie="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
+    <ie:Interaction.Triggers>
+        <ie:EventTrigger EventName="Closing">
+            <ie:InvokeCommandAction Command="{Binding CommandSaveJson}" />
+        </ie:EventTrigger>
+    </ie:Interaction.Triggers>
     <Window.Resources>
         <local:SelectedProjectToEnabledConverter x:Key="SelectedProjectToEnabledConverter"/>
         <local:ImageNullConverter x:Key="ImageNullConverter"/>
@@ -12,6 +17,11 @@
         <conv:NotificationTypeToBorderColorConverter x:Key="NotificationTypeToBorderColorConverter" />
         <conv:IsModeUpdateToButtonContentConverter x:Key="IsModeUpdateToButtonContentConverter"/>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Control" Key="V" Command="{Binding CommandGetImageFromClipboard}" CommandParameter="{x:Null}">
+            
+        </KeyBinding>
+    </Window.InputBindings>
     <TabControl>
         <TabItem Header="Test Senaryoları">
             <Grid>
@@ -176,7 +186,6 @@
                                         <Border Padding="3" HorizontalAlignment="Stretch" BorderBrush="LightBlue" BorderThickness="1">
                                             <DockPanel LastChildFill="True">
                                                 <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Sil" HorizontalAlignment="Right" Width="20" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedImagePath}" CommandParameter="{Binding}" />
-                                                <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Büyüt" HorizontalAlignment="Right" Width="50" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandShowLargeImageWindow}" CommandParameter="{Binding}" />
                                                 <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Kopyala" HorizontalAlignment="Right" Width="50" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandCopyImageToClipboard}" CommandParameter="{Binding}" />
 
                                                 <Border VerticalAlignment="Center">

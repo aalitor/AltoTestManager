@@ -59,6 +59,7 @@ namespace AltoTestManager
         public RelayCommand CommandShowLargeImageWindow { get; set; }
         public RelayCommand CommandChangeUpdateMode { get; set; }
         public RelayCommand SelectedItemChangedCommand { get; set; }
+        public RelayCommand CommandSaveJson { get; set; }
         public ImageSource ImgSource
         {
             get { return imageSource; }
@@ -134,6 +135,7 @@ namespace AltoTestManager
             CommandCopyImageToClipboard = new RelayCommand(new Action<object>(copyImageToClipboard));
             CommandShowLargeImageWindow = new RelayCommand(new Action<object>(showLargeImageWindow));
             CommandChangeUpdateMode = new RelayCommand(new Action<object>(changeUpdateMode));
+            CommandSaveJson = new RelayCommand(new Action<object>(saveJson));
             SelectedItemChangedCommand = new RelayCommand(new Action<object>((x) =>
             {
                 changeUpdateMode(null);
@@ -156,7 +158,11 @@ namespace AltoTestManager
                 var imgpath = (string)obj;
                 if (!File.Exists(imgpath))
                 {
-                    MessageBox.Show("Görsel bulunamadı");
+                    Notification = new AltoTestManager.Notification()
+                    {
+                        Text = "Görsel dosyası yerinde bulunamadı!",
+                        Type = -1
+                    };
                     return;
                 }
                 var largeImageWindow = new LargeImageDisplayerWindow(imgpath);
@@ -195,29 +201,15 @@ namespace AltoTestManager
                 if (obj == null || !(obj is TestProject))
                     return;
 
-                SaveFileDialog dialog = new SaveFileDialog();
-                dialog.Filter = "Word Document (*.docx) | *.docx";
-                //var filename = "";
-                //if (dialog.ShowDialog() == DialogResult.OK)
-                //{
-                //    filename = dialog.FileName;
-                //}
-                //else
-                //{
-                //    return;
-                //}
                 var proj = (TestProject)obj;
 
                 object oMissing = System.Reflection.Missing.Value; object oEndOfDoc = "\\endofdoc";
-                /* \endofdoc is a predefined bookmark */
-                //Start Word and create a new document.    
 
                 Word._Application oWord;
                 Word._Document oDoc = new Word.Document();
                 oWord = new Word.Application();
                 oWord.Visible = false;
                 oDoc = oWord.Documents.Add(ref oMissing, ref oMissing, ref oMissing, ref oMissing);
-                //Insert a paragraph at the beginning of the document.    
                 var num = 1;
                 foreach (var item in proj.TestCases)
                 {
@@ -239,7 +231,7 @@ namespace AltoTestManager
                 //((Microsoft.Office.Interop.Word._Application)oWord).Quit(ref oMissing, ref oMissing, ref oMissing);
                 //oWord = null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "\r\n\r\n" + ex.StackTrace);
             }
@@ -401,25 +393,31 @@ namespace AltoTestManager
         }
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
 
-        void saveJson()
+        void saveJson(object obj = null)
         {
-            var docdir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var filename = "altotestprojeleri.json";
-            var fullpath = Path.Combine(docdir, filename);
-
             var jsondata = JsonConvert.SerializeObject(TestProjects, Formatting.Indented);
-            File.WriteAllText(fullpath, jsondata);
+            File.WriteAllText(JsonPath, jsondata);
         }
         void readJson()
         {
-            var docdir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var filename = "altotestprojeleri.json";
-            var fullpath = Path.Combine(docdir, filename);
-            if (File.Exists(fullpath))
+            if (File.Exists(JsonPath))
                 TestProjects = JsonConvert.DeserializeObject<ObservableCollection<TestProject>>(
-                    File.ReadAllText(fullpath));
+                    File.ReadAllText(JsonPath));
             else
                 TestProjects = new ObservableCollection<TestProject>();
         }
+
+        public string JsonPath
+        {
+            get
+            {
+                var docdir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                var filename = "altotestprojeleri.json";
+                var fullpath = Path.Combine(docdir, filename);
+
+                return fullpath;
+            }
+        }
+
     }
 }

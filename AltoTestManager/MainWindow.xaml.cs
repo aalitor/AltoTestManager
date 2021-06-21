@@ -30,7 +30,7 @@ namespace AltoTestManager
 
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            
         }
 
 
