@@ -12,13 +12,25 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Office = Microsoft.Office.Interop;
+using Word = Microsoft.Office.Interop.Word;
 using MessageBox = System.Windows.MessageBox;
 namespace AltoTestManager
 {
     class MainWindowVM : INotifyPropertyChanged
     {
         private Notification notification;
+        private bool isModeUpdate;
+
+        public bool IsModeUpdate
+        {
+            get { return isModeUpdate; }
+
+            set
+            {
+                isModeUpdate = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("IsModeUpdate"));
+            }
+        }
 
         public Notification Notification
         {
@@ -45,6 +57,8 @@ namespace AltoTestManager
         public RelayCommand CommandNewTestCase { get; set; }
         public RelayCommand CommandCopyImageToClipboard { get; set; }
         public RelayCommand CommandShowLargeImageWindow { get; set; }
+        public RelayCommand CommandChangeUpdateMode { get; set; }
+        public RelayCommand SelectedItemChangedCommand { get; set; }
         public ImageSource ImgSource
         {
             get { return imageSource; }
@@ -119,10 +133,20 @@ namespace AltoTestManager
             CommandNewTestCase = new RelayCommand(new Action<object>(createNewTestCase));
             CommandCopyImageToClipboard = new RelayCommand(new Action<object>(copyImageToClipboard));
             CommandShowLargeImageWindow = new RelayCommand(new Action<object>(showLargeImageWindow));
+            CommandChangeUpdateMode = new RelayCommand(new Action<object>(changeUpdateMode));
+            SelectedItemChangedCommand = new RelayCommand(new Action<object>((x) =>
+            {
+                changeUpdateMode(null);
+            }));
             Notification = new AltoTestManager.Notification() { Text = "", Type = 0 };
             readJson();
             if (TestProjects == null)
                 TestProjects = new ObservableCollection<TestProject>();
+        }
+
+        private void changeUpdateMode(object obj)
+        {
+            IsModeUpdate = !IsModeUpdate;
         }
 
         private void showLargeImageWindow(object obj)
@@ -178,28 +202,37 @@ namespace AltoTestManager
             {
                 return;
             }
-            var proj = (TestProject)obj;
-            Office.Word.Application ap = new Office.Word.Application();
-            object missing = System.Reflection.Missing.Value;
-            Office.Word.Document document = ap.Documents.Add(ref missing, ref missing, ref missing, ref missing);
-            //document.InlineShapes.AddPicture(@"C:\Users\ermcnnj\Desktop\apple.png");
+            var proj = (TestProject)obj; 
+            
+            object oMissing = System.Reflection.Missing.Value; object oEndOfDoc = "\\endofdoc";
+            /* \endofdoc is a predefined bookmark */
+            //Start Word and create a new document.    
+
+            Word._Application oWord;
+            Word._Document oDoc = new Word.Document();
+            oWord = new Word.Application();
+            oWord.Visible = false;
+            oDoc = oWord.Documents.Add(ref oMissing, ref oMissing, ref oMissing, ref oMissing);
+            //Insert a paragraph at the beginning of the document.    
             var num = 1;
             foreach (var item in proj.TestCases)
             {
-                Microsoft.Office.Interop.Word.Paragraph para1 = document.Content.Paragraphs.Add(ref missing);
-                para1.Range.Text = string.Format("{0}. {1}", num++, item.Description);
-                para1.Range.InsertParagraphAfter();
+                Word.Paragraph oPara1;
+                oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
+                oPara1.Range.Text = string.Format("{0}. {1}", num++, item.Description);
+                oPara1.Range.InsertParagraphAfter();
                 foreach (var pic in item.ImagePaths)
                 {
-                    para1.Range.InlineShapes.AddPicture(pic);
+                    oPara1.Range.InlineShapes.AddPicture(pic);
                 }
-                document.Paragraphs.Add(para1);
             }
-            document.SaveAs2(filename);
-            ((Microsoft.Office.Interop.Word._Document)document).Close();
-            document = null;
-            ((Microsoft.Office.Interop.Word._Application)ap).Quit(ref missing, ref missing, ref missing);
-            ap = null;
+            oDoc.SaveAs2(filename);
+            ((Microsoft.Office.Interop.Word._Document)oDoc).Close();
+            oDoc = null;
+            ((Microsoft.Office.Interop.Word._Application)oWord).Quit(ref oMissing, ref oMissing, ref oMissing);
+            oWord = null;
+
+            MessageBox.Show("Dosya oluşturuldu\r\nDosya Yolu:" + filename);
         }
 
         private void getImageFromClipboard(object obj)

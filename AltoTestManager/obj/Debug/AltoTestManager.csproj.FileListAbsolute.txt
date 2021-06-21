@@ -21,3 +21,14 @@ C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestMan
 C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\obj\Debug\AltoTestManager.csproj.ResolveComReference.cache
 C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\obj\Debug\LargeImageDisplayerWindow.baml
 C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\obj\Debug\LargeImageDisplayerWindow.g.cs
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\de\System.Windows.Interactivity.resources.dll
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\en\System.Windows.Interactivity.resources.dll
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\es\System.Windows.Interactivity.resources.dll
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\fr\System.Windows.Interactivity.resources.dll
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\it\System.Windows.Interactivity.resources.dll
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\ja\System.Windows.Interactivity.resources.dll
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\ko\System.Windows.Interactivity.resources.dll
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\ru\System.Windows.Interactivity.resources.dll
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
+C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
