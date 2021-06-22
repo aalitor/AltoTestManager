@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:AltoTestManager.Converters"
         xmlns:local="clr-namespace:AltoTestManager"
-        Title="MainWindow" Height="600" Width="700"
-        xmlns:ie="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
+        Title="Test Manager" Height="600" Width="700"
+        xmlns:ie="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" Icon="img/favicon.ico">
     <ie:Interaction.Triggers>
         <ie:EventTrigger EventName="Closing">
             <ie:InvokeCommandAction Command="{Binding CommandSaveJson}" />

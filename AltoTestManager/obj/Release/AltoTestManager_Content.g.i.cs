@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("img/defaultplaceholder.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("img/favicon.ico")]
 
 
