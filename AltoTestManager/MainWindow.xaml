@@ -51,7 +51,7 @@
                     <ListView Grid.Row="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" SelectedItem="{Binding SelectedTestCase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Wheat" x:Name="testCaseListView" ItemsSource="{Binding SelectedProject.TestCases}">
                         <ie:Interaction.Triggers>
                             <ie:EventTrigger EventName="SelectionChanged">
-                                <ie:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}"  CommandParameter="{Binding ElementName=testCaseListView, Path=SelectedItem}"/>
+                                <ie:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}"  CommandParameter="{Binding ElementName=listv}"/>
                             </ie:EventTrigger>
                         </ie:Interaction.Triggers>
                         <ListView.Template>

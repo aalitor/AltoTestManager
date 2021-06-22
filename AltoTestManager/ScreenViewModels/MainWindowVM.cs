@@ -138,7 +138,8 @@ namespace AltoTestManager
             CommandSaveJson = new RelayCommand(new Action<object>(saveJson));
             SelectedItemChangedCommand = new RelayCommand(new Action<object>((x) =>
             {
-                changeUpdateMode(null);
+                var lv = (System.Windows.Controls.ListView)x;
+                lv.SelectedIndex = 0;
             }));
             Notification = new AltoTestManager.Notification() { Text = "", Type = 0 };
             readJson();
