@@ -31,6 +31,17 @@ namespace AltoTestManager
                 PropertyChanged(this, new PropertyChangedEventArgs("IsModeUpdate"));
             }
         }
+        private TestCase selectedTestCaseToUpdate;
+
+        public TestCase SelectedTestCaseToUpdate
+        {
+            get { return selectedTestCaseToUpdate; }
+            set
+            {
+                selectedTestCaseToUpdate = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("SelectedTestCaseToUpdate"));
+            }
+        }
 
         public Notification Notification
         {
@@ -60,6 +71,8 @@ namespace AltoTestManager
         public RelayCommand CommandChangeUpdateMode { get; set; }
         public RelayCommand SelectedItemChangedCommand { get; set; }
         public RelayCommand CommandSaveJson { get; set; }
+        public RelayCommand CommandChangeUpdateAddMode { get; set; }
+        public RelayCommand CommandTestCaseSelectedChanged { get; set; }
         public ImageSource ImgSource
         {
             get { return imageSource; }
@@ -136,6 +149,7 @@ namespace AltoTestManager
             CommandShowLargeImageWindow = new RelayCommand(new Action<object>(showLargeImageWindow));
             CommandChangeUpdateMode = new RelayCommand(new Action<object>(changeUpdateMode));
             CommandSaveJson = new RelayCommand(new Action<object>(saveJson));
+            CommandTestCaseSelectedChanged = new RelayCommand(new Action<object>(testcaseSelectedChanged));
             SelectedItemChangedCommand = new RelayCommand(new Action<object>((x) =>
             {
                 var lv = (System.Windows.Controls.ListView)x;
@@ -147,9 +161,15 @@ namespace AltoTestManager
                 TestProjects = new ObservableCollection<TestProject>();
         }
 
+        private void testcaseSelectedChanged(object obj)
+        {
+            SelectedTestCaseToUpdate = (TestCase)obj;
+            IsModeUpdate = true;
+        }
         private void changeUpdateMode(object obj)
         {
-            IsModeUpdate = !IsModeUpdate;
+            IsModeUpdate = false;
+            SelectedTestCaseToUpdate = new TestCase("");
         }
 
         private void showLargeImageWindow(object obj)

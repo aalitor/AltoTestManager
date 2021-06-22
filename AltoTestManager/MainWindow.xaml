@@ -19,7 +19,7 @@
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Modifiers="Control" Key="V" Command="{Binding CommandGetImageFromClipboard}" CommandParameter="{x:Null}">
-            
+
         </KeyBinding>
     </Window.InputBindings>
     <TabControl>
@@ -52,6 +52,7 @@
                         <ie:Interaction.Triggers>
                             <ie:EventTrigger EventName="SelectionChanged">
                                 <ie:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}"  CommandParameter="{Binding ElementName=listv}"/>
+                                <ie:InvokeCommandAction Command="{Binding CommandTestCaseSelectedChanged}"  CommandParameter="{Binding ElementName=testCaseListView,Path=SelectedItem}"/>
                             </ie:EventTrigger>
                         </ie:Interaction.Triggers>
                         <ListView.Template>
@@ -107,7 +108,7 @@
                         <StackPanel>
                             <DockPanel Margin="2,5,5,5" LastChildFill="True">
                                 <Label Content="Description:" FontWeight="Bold"></Label>
-                                <TextBox HorizontalAlignment="Stretch" x:Name="txtCaseDesc">
+                                <TextBox Text="{Binding SelectedTestCaseToUpdate.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch" x:Name="txtCaseDesc">
                                     <TextBox.InputBindings>
                                         <KeyBinding Key="Enter" Command="{Binding CommandAddNewTestCase}" CommandParameter="{Binding ElementName=txtCaseDesc, Path=Text}">
                                         </KeyBinding>
@@ -115,7 +116,35 @@
                                 </TextBox>
                             </DockPanel>
                             <DockPanel>
-                                <Button Command="{Binding ElementName=wm, Path=DataContext.CommandAddNewTestCase}" CommandParameter="{Binding ElementName=txtCaseDesc, Path=Text}"  DockPanel.Dock="Right" x:Name="btnModeNew"  Height="30"  Margin="0,0,5,5" HorizontalAlignment="Right"  Content="Yeni Ekle" ></Button>
+                                <Button Command="{Binding ElementName=wm, Path=DataContext.CommandAddNewTestCase}" CommandParameter="{Binding ElementName=txtCaseDesc, Path=Text}"  DockPanel.Dock="Right" x:Name="btnModeNew"  Height="30"  Margin="0,0,5,5" HorizontalAlignment="Right"  Content="Ekle" >
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsModeUpdate}" Value="False">
+                                                    <Setter Property="IsEnabled" Value="True"></Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsModeUpdate}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="False"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                                <Button Command="{Binding ElementName=wm, Path=DataContext.CommandChangeUpdateMode}" CommandParameter="{Binding ElementName=testCaseListView, Path=SelectedItem}"  DockPanel.Dock="Right" x:Name="btnAddNewCase"  Height="30"  Margin="0,0,5,5" HorizontalAlignment="Right"  Content="Yeni Senaryo" >
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsModeUpdate}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="True"></Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsModeUpdate}" Value="False">
+                                                    <Setter Property="IsEnabled" Value="False"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
                             </DockPanel>
                         </StackPanel>
                     </GroupBox>
