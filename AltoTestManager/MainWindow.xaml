@@ -96,7 +96,19 @@
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Border Padding="3" Background="WhiteSmoke" >
+                                <Border x:Name="brdItem" Padding="3">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem, Mode=FindAncestor}, Path=IsSelected}" Value="True">
+                                                    <Setter Property="Background" Value="Pink"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem, Mode=FindAncestor}, Path=IsSelected}" Value="False">
+                                                    <Setter Property="Background" Value="WhiteSmoke"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
                                     <Grid>
 
                                         <Grid.ColumnDefinitions>
