@@ -65,6 +65,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\IsModeUpdateToButtonContentConverter.cs" />
     <Compile Include="Converters\NotificationTypeToBorderColorConverter.cs" />
+    <Compile Include="Converters\ObjectArrayConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="ImageButton.xaml.cs">
       <DependentUpon>ImageButton.xaml</DependentUpon>
