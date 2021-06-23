@@ -52,7 +52,6 @@
                         <ie:Interaction.Triggers>
                             <ie:EventTrigger EventName="SelectionChanged">
                                 <ie:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}"  CommandParameter="{Binding ElementName=listv}"/>
-                                <ie:InvokeCommandAction Command="{Binding CommandTestCaseSelectedChanged}"  CommandParameter="{Binding ElementName=testCaseListView,Path=SelectedItem}"/>
                             </ie:EventTrigger>
                         </ie:Interaction.Triggers>
                         <ListView.Template>
@@ -73,7 +72,9 @@
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="35"/>
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />                                        
+                                        <ColumnDefinition Width="Auto" />
+
                                         <ColumnDefinition Width="35" />
                                     </Grid.ColumnDefinitions>
                                     <Border Grid.Column="0" Height="35" Background="LightGray" BorderBrush="Gray" BorderThickness="1">
@@ -99,7 +100,9 @@
                                     </Border>
                                     <TextBlock HorizontalAlignment="Stretch" Grid.Column="1" TextWrapping="Wrap" Padding="5,0,0,0" Text="{Binding Description}">
                                     </TextBlock>
-                                    <Button Grid.Column="2" HorizontalAlignment="Right" Width="30" Content="Sil" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedTestCase}" CommandParameter="{Binding}"/>
+                                    <Button Grid.Column="2" HorizontalAlignment="Right" Content="Güncelle" Command="{Binding ElementName=wm, Path=DataContext.CommandTestCaseSelectedChanged}"  CommandParameter="{Binding}"/>
+
+                                    <Button Grid.Column="3" HorizontalAlignment="Right" Width="30" Content="Sil" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedTestCase}" CommandParameter="{Binding}"/>
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
