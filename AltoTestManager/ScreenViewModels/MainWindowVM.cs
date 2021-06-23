@@ -52,8 +52,36 @@ namespace AltoTestManager
                 PropertyChanged(this, new PropertyChangedEventArgs("Notification"));
             }
         }
-
+        public string DataFolder
+        {
+            get
+            {
+                return Properties.Settings.Default.DataFolder;
+            }
+            set
+            {
+                if (!Directory.Exists(value))
+                {
+                    MessageBox.Show("Klasör bulunamadı!");
+                    return;
+                }
+                Properties.Settings.Default.DataFolder = value;
+                Properties.Settings.Default.Save();
+                readJson();
+                PropertyChanged(this, new PropertyChangedEventArgs(null));
+            }
+        }
+        public string JsonPath
+        {
+            get
+            {
+                return Path.Combine(DataFolder, "altotestprojeleri.json");
+            }
+        }
         public ObservableCollection<TestProject> TestProjects { get; set; }
+        public RelayCommand SelectDataPath { get; set; }
+        public RelayCommand SelectDataFolder { get; set; }
+
         public RelayCommand CommandChangeTestCase { get; set; }
         public RelayCommand CommandAddNewTestCase { get; set; }
         public RelayCommand CommandAddNewTestProject { get; set; }
@@ -100,7 +128,8 @@ namespace AltoTestManager
             set
             {
                 selectedTestProject = value;
-
+                IsModeUpdate = false;
+                SelectedTestCaseToUpdate = new TestCase("");
                 PropertyChanged(this, new PropertyChangedEventArgs("SelectedProject"));
 
             }
@@ -155,10 +184,25 @@ namespace AltoTestManager
                 var lv = (System.Windows.Controls.ListView)x;
                 lv.SelectedIndex = 0;
             }));
+            SelectDataFolder = new RelayCommand(new Action<object>(selectDataFolder));
             Notification = new AltoTestManager.Notification() { Text = "", Type = 0 };
             readJson();
             if (TestProjects == null)
                 TestProjects = new ObservableCollection<TestProject>();
+            if (string.IsNullOrEmpty(DataFolder))
+                DataFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        }
+
+        private void selectDataFolder(object obj)
+        {
+            using (var ofd = new FolderBrowserDialog())
+            {
+                ofd.RootFolder = Environment.SpecialFolder.Desktop;
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    DataFolder = ofd.SelectedPath;
+                }
+            }
         }
 
         private void testcaseSelectedChanged(object obj)
@@ -367,7 +411,7 @@ namespace AltoTestManager
         }
         string checkProjectFolder()
         {
-            var doc = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var doc = DataFolder;
             var projdir = Path.Combine(doc, SelectedProject.Caption);
             if (!Directory.Exists(projdir))
             {
@@ -431,17 +475,6 @@ namespace AltoTestManager
                 TestProjects = new ObservableCollection<TestProject>();
         }
 
-        public string JsonPath
-        {
-            get
-            {
-                var docdir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                var filename = "altotestprojeleri.json";
-                var fullpath = Path.Combine(docdir, filename);
-
-                return fullpath;
-            }
-        }
 
     }
 }
