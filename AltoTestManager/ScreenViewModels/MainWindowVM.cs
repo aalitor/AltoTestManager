@@ -31,6 +31,21 @@ namespace AltoTestManager
                 PropertyChanged(this, new PropertyChangedEventArgs("IsModeUpdate"));
             }
         }
+
+        public bool WordOpenSaveAsDialog
+        {
+            get { return Properties.Settings.Default.WordOpenSaveAsDialog; }
+            set
+            {
+                if (value != Properties.Settings.Default.WordOpenSaveAsDialog)
+                {
+                    Properties.Settings.Default.WordOpenSaveAsDialog = value;
+                    Properties.Settings.Default.Save();
+                    PropertyChanged(this, new PropertyChangedEventArgs("WordOpenSaveAsDialog"));
+                }
+            }
+        }
+
         private TestCase selectedTestCaseToUpdate;
 
         public TestCase SelectedTestCaseToUpdate
@@ -264,10 +279,11 @@ namespace AltoTestManager
         {
             try
             {
-
-
                 if (obj == null || !(obj is TestProject))
+                {
+                    MessageBox.Show("Proje seçiniz!");
                     return;
+                }
 
                 var proj = (TestProject)obj;
 
@@ -291,13 +307,25 @@ namespace AltoTestManager
                     }
                     oPara1.Range.InsertParagraphAfter();
                 }
-                oWord.Visible = true;
-
-                //oDoc.SaveAs(filename);
-                //((Microsoft.Office.Interop.Word._Document)oDoc).Close();
-                //oDoc = null;
-                //((Microsoft.Office.Interop.Word._Application)oWord).Quit(ref oMissing, ref oMissing, ref oMissing);
-                //oWord = null;
+                oWord.Visible = !WordOpenSaveAsDialog;
+                oDoc.Activate();
+                oWord.Activate();
+                if (WordOpenSaveAsDialog)
+                {
+                    using (var ofd = new SaveFileDialog())
+                    {
+                        ofd.Filter = "Word documents (*.docx) | *.docx";
+                        ofd.RestoreDirectory = true;
+                        if (ofd.ShowDialog() == DialogResult.OK)
+                        {
+                            oDoc.SaveAs(ofd.FileName);
+                            ((Microsoft.Office.Interop.Word._Document)oDoc).Close();
+                            oDoc = null;
+                            ((Microsoft.Office.Interop.Word._Application)oWord).Quit(ref oMissing, ref oMissing, ref oMissing);
+                            oWord = null;
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {

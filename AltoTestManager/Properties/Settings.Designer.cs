@@ -46,5 +46,17 @@ namespace AltoTestManager.Properties {
                 this["DataFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WordOpenSaveAsDialog {
+            get {
+                return ((bool)(this["WordOpenSaveAsDialog"]));
+            }
+            set {
+                this["WordOpenSaveAsDialog"] = value;
+            }
+        }
     }
 }
