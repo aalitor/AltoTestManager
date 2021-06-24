@@ -199,8 +199,8 @@
                             </DockPanel>
                         </StackPanel>
                     </GroupBox>
-                    <StatusBar BorderThickness="1" BorderBrush="{Binding Notification.Type, Converter={StaticResource NotificationTypeToBorderColorConverter}, NotifyOnTargetUpdated=True}" Grid.Row="4" Height="30" Background="White">
-                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Red" Text="{Binding Notification.Text, NotifyOnTargetUpdated=True}" >
+                    <StatusBar BorderThickness="4" BorderBrush="{Binding Notification.Type, Converter={StaticResource NotificationTypeToBorderColorConverter}, NotifyOnTargetUpdated=True}" Grid.Row="4" Height="30" Background="White">
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding Notification.Text, NotifyOnTargetUpdated=True}" >
                             <TextBlock.Triggers>
                                 <EventTrigger RoutedEvent="Binding.TargetUpdated">
                                     <BeginStoryboard>
@@ -215,7 +215,23 @@
 
                                     </BeginStoryboard>
                                 </EventTrigger>
+                                
                             </TextBlock.Triggers>
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Notification.Type}" Value="1">
+                                            <Setter Property="Foreground" Value="Green"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Notification.Type}" Value="0">
+                                            <Setter Property="Foreground" Value="Black"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Notification.Type}" Value="-1">
+                                            <Setter Property="Foreground" Value="Red"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
                         </TextBlock>
                         <StatusBar.Triggers>
                             <EventTrigger  RoutedEvent="Binding.TargetUpdated">

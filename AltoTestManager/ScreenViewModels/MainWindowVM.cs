@@ -308,8 +308,12 @@ namespace AltoTestManager
                     oPara1.Range.InsertParagraphAfter();
                 }
                 oWord.Visible = !WordOpenSaveAsDialog;
-                oDoc.Activate();
-                oWord.Activate();
+                if (!WordOpenSaveAsDialog)
+                {
+
+                    oDoc.Activate();
+                    oWord.Activate();
+                }
                 if (WordOpenSaveAsDialog)
                 {
                     using (var ofd = new SaveFileDialog())
@@ -325,6 +329,8 @@ namespace AltoTestManager
                             oWord = null;
                         }
                     }
+                    Notification.Text = "Dosya kaydedildi";
+                    Notification.Type = 1;
                 }
             }
             catch (Exception ex)
@@ -337,6 +343,18 @@ namespace AltoTestManager
         {
             if (System.Windows.Clipboard.ContainsImage())
             {
+                if (SelectedProject == null)
+                {
+                    Notification.Text = "Görseli eklemek için proje seçmeniz gerekiyor";
+                    Notification.Type = -1;
+                    return;
+                }
+                if (SelectedTestCase == null)
+                {
+                    Notification.Text = "Görseli eklemek için test senaryosu seçmeniz gerekiyor";
+                    Notification.Type = -1;
+                    return;
+                }
                 // ImageUIElement.Source = Clipboard.GetImage(); // does not work
                 System.Windows.Forms.IDataObject clipboardData = System.Windows.Forms.Clipboard.GetDataObject();
                 if (clipboardData != null)
@@ -346,9 +364,15 @@ namespace AltoTestManager
                         System.Drawing.Bitmap bitmap = (System.Drawing.Bitmap)clipboardData.GetData(System.Windows.Forms.DataFormats.Bitmap);
                         addNewImage(
                             System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()));
-
                     }
                 }
+            }
+
+            else
+            {
+                Notification.Text = "Panoda kopyalanmış görsel bulunamadı";
+                Notification.Type = -1;
+                return;
             }
         }
 
