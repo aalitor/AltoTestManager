@@ -58,5 +58,17 @@ namespace AltoTestManager.Properties {
                 this["WordOpenSaveAsDialog"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int StretchType {
+            get {
+                return ((int)(this["StretchType"]));
+            }
+            set {
+                this["StretchType"] = value;
+            }
+        }
     }
 }

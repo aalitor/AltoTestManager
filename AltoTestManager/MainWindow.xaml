@@ -215,7 +215,7 @@
 
                                     </BeginStoryboard>
                                 </EventTrigger>
-                                
+
                             </TextBlock.Triggers>
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
@@ -349,16 +349,26 @@
         </TabItem>
         <TabItem Header="Ayarlar">
             <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="27*"/>
+                    <ColumnDefinition Width="316*"/>
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <StackPanel Margin="3" VerticalAlignment="Top" Orientation="Horizontal">
+                <StackPanel Margin="3,3,3,0" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2">
                     <TextBlock FontWeight="Bold" Foreground="Black" Margin="3,0,3,0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Saklama Yeri:" />
                     <TextBox Background="WhiteSmoke" IsReadOnly="True" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Width="400" Text="{Binding DataFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <Button Padding="3" Content="Klasör Seç" Command="{Binding SelectDataFolder}" Height="30" Margin="4,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
-                <CheckBox Margin="3,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" IsChecked="{Binding WordOpenSaveAsDialog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Word dosyasını farklı kaydet" />
+                <CheckBox Margin="3,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" IsChecked="{Binding WordOpenSaveAsDialog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Word dosyasını farklı kaydet" Grid.ColumnSpan="2" />
+                <StackPanel Margin="1,10,0,0"   Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                    <Label  Content="Görsel boyutu"/>
+                    <ComboBox Width="200" ItemsSource="{Binding StretchEnumList}" SelectedItem="{Binding SelectedStretch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              />
+                </StackPanel>
             </Grid>
         </TabItem>
     </TabControl>

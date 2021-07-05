@@ -19,10 +19,13 @@ namespace AltoTestManager
     /// </summary>
     public partial class LargeImageDisplayerWindow : Window
     {
-        public LargeImageDisplayerWindow(string imagePath)
+        public LargeImageDisplayerWindow(string imagePath, Stretch stretchType)
         {
             InitializeComponent();
-            this.DataContext = new LargeImageDisplayerWindowVM(imagePath);
+            this.DataContext = new LargeImageDisplayerWindowVM(imagePath)
+            {
+                StretchType = stretchType
+            };
         }
     }
 }

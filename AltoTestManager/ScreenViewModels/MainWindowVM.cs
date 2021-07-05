@@ -21,6 +21,27 @@ namespace AltoTestManager
         private Notification notification;
         private bool isModeUpdate;
 
+
+
+        public Stretch SelectedStretch
+        {
+            get { return (Stretch)Properties.Settings.Default.StretchType; }
+            set
+            {
+                Properties.Settings.Default.StretchType = (int)value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public List<Stretch> StretchEnumList
+        {
+            get
+            {
+                var list = Enum.GetValues(typeof(Stretch)).Cast<Stretch>().ToList();
+                return list;
+            }
+        }
+
         public bool IsModeUpdate
         {
             get { return isModeUpdate; }
@@ -180,6 +201,7 @@ namespace AltoTestManager
         public MainWindowVM()
         {
             TestProjects = new ObservableCollection<TestProject>();
+            SelectedStretch = Stretch.Uniform;
             CommandDeleteTestProject = new RelayCommand(new Action<object>(deleteTestProject));
             CommandChangeTestCase = new RelayCommand(new Action<object>(changeTestCaseStatus));
             CommandAddNewTestCase = new RelayCommand(new Action<object>(addNewTestCase));
@@ -248,7 +270,7 @@ namespace AltoTestManager
                     };
                     return;
                 }
-                var largeImageWindow = new LargeImageDisplayerWindow(imgpath);
+                var largeImageWindow = new LargeImageDisplayerWindow(imgpath, SelectedStretch);
                 largeImageWindow.ShowDialog();
             }
         }
@@ -404,12 +426,20 @@ namespace AltoTestManager
         }
         void deleteSelectedImagePath(object ss)
         {
-            var selectedItem = (string)ss;
-            if (selectedItem != null)
+            try
             {
-                SelectedTestCase.ImagePaths.Remove(selectedItem);
-                File.Delete(selectedItem);
-                saveJson();
+                var selectedItem = (string)ss;
+                if (selectedItem != null)
+                {
+                    File.Delete(selectedItem);
+                    SelectedTestCase.ImagePaths.Remove(selectedItem);
+                    saveJson();
+                }
+            }
+            catch(Exception ex)
+            {
+                Notification.Text = ex.Message;
+                Notification.Type = -1;
             }
         }
 

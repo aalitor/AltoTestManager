@@ -4,6 +4,6 @@
         Title="Large Image Displayer" WindowStyle="ToolWindow"  ResizeMode="CanMinimize" 
     WindowStartupLocation="CenterScreen"  Height="300" Width="300" WindowState="Maximized" Icon="img/favicon.ico">
     <Grid>
-        <Image Source="{Binding ImagePath}" Stretch="None" />
+        <Image Source="{Binding ImagePath}" Stretch="{Binding StretchType}" />
     </Grid>
 </Window>
