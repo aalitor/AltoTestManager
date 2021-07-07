@@ -322,9 +322,9 @@ namespace AltoTestManager
                     Word.Paragraph oPara1;
                     oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
                     oPara1.Range.Text = string.Format("{0}. {1}", num++, item.Description);
-                    oPara1.Range.InsertParagraphAfter();
                     foreach (var pic in item.ImagePaths)
                     {
+                        oPara1.Range.InsertParagraphAfter();
                         oPara1.Range.InlineShapes.AddPicture(pic);
                     }
                     oPara1.Range.InsertParagraphAfter();
@@ -514,8 +514,7 @@ namespace AltoTestManager
 
             if (TestProjects.Any(x => x.Caption.Equals(projname)))
             {
-                Notification.Text = "Aynı isimli bir proje zaten var, ekleme yapılamaz";
-                Notification.Type = -1;
+                MessageBox.Show("Aynı isimli bir proje zaten var, ekleme yapılamaz");
                 return;
             }
             var proj = new TestProject(projname);
