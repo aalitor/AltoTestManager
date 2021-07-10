@@ -137,6 +137,8 @@ namespace AltoTestManager
         public RelayCommand CommandSaveJson { get; set; }
         public RelayCommand CommandChangeUpdateAddMode { get; set; }
         public RelayCommand CommandTestCaseSelectedChanged { get; set; }
+
+        public RelayCommand CommandCopySelectedTestCaseText { get; set; }
         public ImageSource ImgSource
         {
             get { return imageSource; }
@@ -202,6 +204,7 @@ namespace AltoTestManager
         {
             TestProjects = new ObservableCollection<TestProject>();
             SelectedStretch = Stretch.Uniform;
+            CommandCopySelectedTestCaseText = new RelayCommand(new Action<object>(copySelectedTestCaseText));
             CommandDeleteTestProject = new RelayCommand(new Action<object>(deleteTestProject));
             CommandChangeTestCase = new RelayCommand(new Action<object>(changeTestCaseStatus));
             CommandAddNewTestCase = new RelayCommand(new Action<object>(addNewTestCase));
@@ -229,7 +232,16 @@ namespace AltoTestManager
             if (string.IsNullOrEmpty(DataFolder))
                 DataFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         }
-
+        void copySelectedTestCaseText(object obj)
+        {
+            if(obj is TestCase)
+            {
+                var sel = (TestCase)obj;
+                System.Windows.Forms.Clipboard.SetText(sel.Description);
+                Notification.Text = "Test senaryosu metni kopyalandı";
+                Notification.Type = 1;
+            }
+        }
         private void selectDataFolder(object obj)
         {
             using (var ofd = new FolderBrowserDialog())
@@ -516,6 +528,14 @@ namespace AltoTestManager
             {
                 MessageBox.Show("Aynı isimli bir proje zaten var, ekleme yapılamaz");
                 return;
+            }
+            foreach (var item in Path.GetInvalidPathChars())
+            {
+                projname = projname.Replace(item.ToString(), "");
+            }
+            foreach (var item in Path.GetInvalidFileNameChars())
+            {
+                projname = projname.Replace(item.ToString(), "");
             }
             var proj = new TestProject(projname);
             TestProjects.Add(proj);

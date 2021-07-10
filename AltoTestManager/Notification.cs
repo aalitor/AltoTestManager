@@ -32,6 +32,7 @@ namespace AltoTestManager
             }
         }
 
+        
 
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
     }
