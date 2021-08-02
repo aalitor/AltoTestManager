@@ -22,7 +22,7 @@ namespace AltoTestManager
         private bool isModeUpdate;
 
 
-
+        public ObservableCollection<TestProject> EditTestProjects { get; set; }
         public Stretch SelectedStretch
         {
             get { return (Stretch)Properties.Settings.Default.StretchType; }
@@ -30,6 +30,55 @@ namespace AltoTestManager
             {
                 Properties.Settings.Default.StretchType = (int)value;
                 Properties.Settings.Default.Save();
+            }
+        }
+        private bool isTestEnvironment;
+        private bool isPreprodEnvironment;
+
+        public bool IsPreprodEnvironment
+        {
+            get { return isPreprodEnvironment; }
+            set
+            {
+                isPreprodEnvironment = value;
+                updateTestProjectsByEnv();
+                PropertyChanged(this, new PropertyChangedEventArgs("IsPreprodEnvironment"));
+            }
+        }
+
+        public bool IsTestEnvironment
+        {
+            get { return isTestEnvironment; }
+            set
+            {
+                isTestEnvironment = value;
+                updateTestProjectsByEnv();
+                PropertyChanged(this, new PropertyChangedEventArgs("IsTestEnvironment"));
+            }
+        }
+
+        private bool addIsTestEnvironment;
+        private bool addIsPreprodEnvironment;
+
+        public bool AddIsPreprodEnvironment
+        {
+            get { return addIsPreprodEnvironment; }
+            set
+            {
+                addIsPreprodEnvironment = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("AddIsPreprodEnvironment"));
+                updateEditTestProjectsByEnv();
+            }
+        }
+
+        public bool AddIsTestEnvironment
+        {
+            get { return addIsTestEnvironment; }
+            set
+            {
+                addIsTestEnvironment = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("AddIsTestEnvironment"));
+                updateEditTestProjectsByEnv();
             }
         }
 
@@ -115,6 +164,7 @@ namespace AltoTestManager
             }
         }
         public ObservableCollection<TestProject> TestProjects { get; set; }
+        public ObservableCollection<TestProject> TestProjectsByEnv { get; set; }
         public RelayCommand SelectDataPath { get; set; }
         public RelayCommand SelectDataFolder { get; set; }
 
@@ -137,7 +187,7 @@ namespace AltoTestManager
         public RelayCommand CommandSaveJson { get; set; }
         public RelayCommand CommandChangeUpdateAddMode { get; set; }
         public RelayCommand CommandTestCaseSelectedChanged { get; set; }
-
+        public RelayCommand CommandCloneTestProject { get; set; }
         public RelayCommand CommandCopySelectedTestCaseText { get; set; }
         public ImageSource ImgSource
         {
@@ -203,7 +253,13 @@ namespace AltoTestManager
         public MainWindowVM()
         {
             TestProjects = new ObservableCollection<TestProject>();
+            TestProjectsByEnv = new ObservableCollection<TestProject>();
+            EditTestProjects = new ObservableCollection<TestProject>();
+            readJson();
+            IsTestEnvironment = true;
+            AddIsTestEnvironment = true;
             SelectedStretch = Stretch.Uniform;
+            CommandCloneTestProject = new RelayCommand(new Action<object>(cloneTestProject));
             CommandCopySelectedTestCaseText = new RelayCommand(new Action<object>(copySelectedTestCaseText));
             CommandDeleteTestProject = new RelayCommand(new Action<object>(deleteTestProject));
             CommandChangeTestCase = new RelayCommand(new Action<object>(changeTestCaseStatus));
@@ -226,15 +282,30 @@ namespace AltoTestManager
             }));
             SelectDataFolder = new RelayCommand(new Action<object>(selectDataFolder));
             Notification = new AltoTestManager.Notification() { Text = "", Type = 0 };
-            readJson();
             if (TestProjects == null)
                 TestProjects = new ObservableCollection<TestProject>();
             if (string.IsNullOrEmpty(DataFolder))
                 DataFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         }
+        void cloneTestProject(object obj)
+        {
+            if (obj != null && obj is TestProject)
+            {
+                var sel = (TestProject)obj;
+                var cloneproj = new TestProject(sel.Caption);
+                foreach (var testcase in sel.TestCases)
+                {
+                    var clonecase = new TestCase(testcase.Description, TestCaseStatus.Untested);
+                    cloneproj.TestCases.Add(clonecase);
+                }
+                cloneproj.IsTestEnvironment = AddIsTestEnvironment;
+                cloneproj.IsPreprodEnvironment = AddIsPreprodEnvironment;
+                addNewTestProject(cloneproj);
+            }
+        }
         void copySelectedTestCaseText(object obj)
         {
-            if(obj is TestCase)
+            if (obj is TestCase)
             {
                 var sel = (TestCase)obj;
                 System.Windows.Forms.Clipboard.SetText(sel.Description);
@@ -448,7 +519,7 @@ namespace AltoTestManager
                     saveJson();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Notification.Text = ex.Message;
                 Notification.Type = -1;
@@ -515,34 +586,74 @@ namespace AltoTestManager
         }
         void addNewTestProject(object parameter)
         {
-            var projname = (string)parameter;
+            if (parameter is string)
+            {
+                var projname = (string)parameter;
 
-            if (string.IsNullOrEmpty(projname))
-            {
-                Notification.Text = "Proje ismi giriniz";
-                Notification.Type = -1;
-                return;
-            }
+                if (string.IsNullOrEmpty(projname))
+                {
+                    Notification.Text = "Proje ismi giriniz";
+                    Notification.Type = -1;
+                    return;
+                }
 
-            if (TestProjects.Any(x => x.Caption.Equals(projname)))
-            {
-                MessageBox.Show("Aynı isimli bir proje zaten var, ekleme yapılamaz");
-                return;
+                if (EditTestProjects.Any(x => x.Caption.Equals(projname)))
+                {
+                    MessageBox.Show(string.Format(
+                        "Aynı isimli bir proje {0} ortamında zaten var, ekleme yapılamaz",
+                        AddIsTestEnvironment ? "Test" : "Preprod"));
+                    return;
+                }
+                foreach (var item in Path.GetInvalidPathChars())
+                {
+                    projname = projname.Replace(item.ToString(), "");
+                }
+                foreach (var item in Path.GetInvalidFileNameChars())
+                {
+                    projname = projname.Replace(item.ToString(), "");
+                }
+                var proj = new TestProject(projname);
+                proj.IsTestEnvironment = AddIsTestEnvironment;
+                proj.IsPreprodEnvironment = AddIsPreprodEnvironment;
+                TestProjects.Add(proj);
+                MessageBox.Show(string.Format("{0} projesi eklendi", projname));
+                projname = "";
+                saveJson();
             }
-            foreach (var item in Path.GetInvalidPathChars())
+            else if (parameter is TestProject)
             {
-                projname = projname.Replace(item.ToString(), "");
-            }
-            foreach (var item in Path.GetInvalidFileNameChars())
-            {
-                projname = projname.Replace(item.ToString(), "");
-            }
-            var proj = new TestProject(projname);
-            TestProjects.Add(proj);
-            MessageBox.Show(string.Format("{0} projesi eklendi", projname));
-            projname = "";
-            saveJson();
+                var proj = (TestProject)parameter;
+                var projname = proj.Caption;
 
+                if (string.IsNullOrEmpty(projname))
+                {
+                    Notification.Text = "Proje ismi giriniz";
+                    Notification.Type = -1;
+                    return;
+                }
+
+                if (EditTestProjects.Any(x => x.Caption.Equals(projname)))
+                {
+                    MessageBox.Show(string.Format(
+                        "Aynı isimli bir proje {0} ortamında zaten var, ekleme yapılamaz",
+                        AddIsTestEnvironment ? "Test" : "Preprod"));
+                    return;
+                }
+                foreach (var item in Path.GetInvalidPathChars())
+                {
+                    projname = projname.Replace(item.ToString(), "");
+                }
+                foreach (var item in Path.GetInvalidFileNameChars())
+                {
+                    projname = projname.Replace(item.ToString(), "");
+                }
+                proj.IsTestEnvironment = AddIsTestEnvironment;
+                proj.IsPreprodEnvironment = AddIsPreprodEnvironment;
+                TestProjects.Add(proj);
+                MessageBox.Show(string.Format("{0} projesi eklendi", projname));
+                projname = "";
+                saveJson();
+            }
         }
 
         void deleteTestProject(object parameter)
@@ -553,10 +664,11 @@ namespace AltoTestManager
                 if (selectedProj != null)
                 {
                     var capt = selectedProj.Caption;
-                    TestProjects.RemoveAll(x => x.Caption == capt);
+                    EditTestProjects.RemoveAll(x => x.Caption == capt);
                     MessageBox.Show(string.Format("{0} projesi silindi", capt));
                 }
             }
+
             saveJson();
 
         }
@@ -566,16 +678,44 @@ namespace AltoTestManager
         {
             var jsondata = JsonConvert.SerializeObject(TestProjects, Formatting.Indented);
             File.WriteAllText(JsonPath, jsondata);
+            updateTestProjectsByEnv();
+            updateEditTestProjectsByEnv();
         }
         void readJson()
         {
             if (File.Exists(JsonPath))
+            {
                 TestProjects = JsonConvert.DeserializeObject<ObservableCollection<TestProject>>(
                     File.ReadAllText(JsonPath));
+                foreach (var proj in TestProjects)
+                {
+                    if (proj.IsTestEnvironment || proj.IsPreprodEnvironment)
+                        continue;
+                    proj.IsTestEnvironment = true;
+                }
+                updateTestProjectsByEnv();
+            }
             else
                 TestProjects = new ObservableCollection<TestProject>();
         }
 
-
+        void updateTestProjectsByEnv()
+        {
+            TestProjectsByEnv.Clear();
+            foreach (var item in TestProjects.Where(x => x.IsTestEnvironment == IsTestEnvironment
+                && x.IsPreprodEnvironment == IsPreprodEnvironment))
+            {
+                TestProjectsByEnv.Add(item);
+            }
+        }
+        void updateEditTestProjectsByEnv()
+        {
+            EditTestProjects.Clear();
+            foreach (var item in TestProjects.Where(x => x.IsTestEnvironment == AddIsTestEnvironment
+                && x.IsPreprodEnvironment == AddIsPreprodEnvironment))
+            {
+                EditTestProjects.Add(item);
+            }
+        }
     }
 }
