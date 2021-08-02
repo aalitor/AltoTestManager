@@ -664,7 +664,7 @@ namespace AltoTestManager
                 if (selectedProj != null)
                 {
                     var capt = selectedProj.Caption;
-                    EditTestProjects.RemoveAll(x => x.Caption == capt);
+                    TestProjects.RemoveAll(x => x.Caption == capt);
                     MessageBox.Show(string.Format("{0} projesi silindi", capt));
                 }
             }
