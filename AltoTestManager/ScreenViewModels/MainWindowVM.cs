@@ -654,6 +654,8 @@ namespace AltoTestManager
                 projname = "";
                 saveJson();
             }
+            updateTestProjectsByEnv();
+            updateEditTestProjectsByEnv();
         }
 
         void deleteTestProject(object parameter)
@@ -669,7 +671,8 @@ namespace AltoTestManager
                     MessageBox.Show(string.Format("{0} projesi silindi", capt));
                 }
             }
-
+            updateTestProjectsByEnv();
+            updateEditTestProjectsByEnv();
             saveJson();
 
         }
@@ -679,8 +682,7 @@ namespace AltoTestManager
         {
             var jsondata = JsonConvert.SerializeObject(TestProjects, Formatting.Indented);
             File.WriteAllText(JsonPath, jsondata);
-            updateTestProjectsByEnv();
-            updateEditTestProjectsByEnv();
+            
         }
         void readJson()
         {
