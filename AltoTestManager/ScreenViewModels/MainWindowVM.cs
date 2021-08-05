@@ -639,8 +639,8 @@ namespace AltoTestManager
                 {
                     projname = projname.Replace(item.ToString(), "");
                 }
-                var proj = new TestProject(projname);
                 projname += AddIsPreprodEnvironment ? " - PREPROD" : " - TEST";
+                var proj = new TestProject(projname);
                 proj.IsTestEnvironment = AddIsTestEnvironment;
                 proj.IsPreprodEnvironment = AddIsPreprodEnvironment;
                 TestProjects.Add(proj);
@@ -676,9 +676,11 @@ namespace AltoTestManager
                     projname = projname.Replace(item.ToString(), "");
                 }
                 projname += AddIsPreprodEnvironment ? " - PREPROD" : " - TEST";
+                proj.Caption = projname;
                 proj.IsTestEnvironment = AddIsTestEnvironment;
                 proj.IsPreprodEnvironment = AddIsPreprodEnvironment;
                 TestProjects.Add(proj);
+
                 MessageBox.Show(string.Format("{0} projesi eklendi", projname));
                 projname = "";
                 saveJson();
