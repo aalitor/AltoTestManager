@@ -407,8 +407,11 @@ namespace AltoTestManager
                     oPara1.Range.Text = string.Format("{0}. {1}", num++, item.Description);
                     foreach (var pic in item.ImagePaths)
                     {
-                        oPara1.Range.InsertParagraphAfter();
-                        oPara1.Range.InlineShapes.AddPicture(pic);
+                        if (IsValidPath(pic, false) && File.Exists(pic))
+                        {
+                            oPara1.Range.InsertParagraphAfter();
+                            oPara1.Range.InlineShapes.AddPicture(pic);
+                        }
                     }
                     oPara1.Range.InsertParagraphAfter();
                 }
@@ -443,7 +446,31 @@ namespace AltoTestManager
                 MessageBox.Show(ex.Message + "\r\n\r\n" + ex.StackTrace);
             }
         }
+        private bool IsValidPath(string path, bool allowRelativePaths = false)
+        {
+            bool isValid = true;
 
+            try
+            {
+                string fullPath = Path.GetFullPath(path);
+
+                if (allowRelativePaths)
+                {
+                    isValid = Path.IsPathRooted(path);
+                }
+                else
+                {
+                    string root = Path.GetPathRoot(path);
+                    isValid = string.IsNullOrEmpty(root.Trim(new char[] { '\\', '/' })) == false;
+                }
+            }
+            catch (Exception ex)
+            {
+                isValid = false;
+            }
+
+            return isValid;
+        }
         private void getImageFromClipboard(object obj)
         {
             if (System.Windows.Clipboard.ContainsImage())
