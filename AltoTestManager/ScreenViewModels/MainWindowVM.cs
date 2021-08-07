@@ -328,6 +328,8 @@ namespace AltoTestManager
         private void testcaseSelectedChanged(object obj)
         {
             var arr = (Tuple<TestCase, System.Windows.Controls.ListView>)obj;
+            if (arr.Item1 == null)
+                return;
             SelectedTestCaseToUpdate = arr.Item1;
             var lv = arr.Item2;
             lv.SelectedItem = SelectedTestCaseToUpdate;

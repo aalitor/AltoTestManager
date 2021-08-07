@@ -46,6 +46,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <DockPanel Margin="0,4,0,0">
                             <RadioButton IsChecked="{Binding IsTestEnvironment, Mode=TwoWay}" Content="Test" VerticalContentAlignment="Center" Height="20" Width="100"/>
@@ -62,7 +63,20 @@
                                 </ComboBox>
                             </Border>
                         </DockPanel>
-
+                        <GroupBox Margin="0,5,0,8" Grid.Row="2" Header="Seçili Senaryo İşlemleri">
+                            <StackPanel Margin="0,3,0,3" Height="30" Orientation="Horizontal">
+                            <Button Width="50" Margin="0,0,5,0" Grid.Column="2" HorizontalAlignment="Right" Content="Güncelle" Command="{Binding ElementName=wm, Path=DataContext.CommandTestCaseSelectedChanged}" >
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource ObjectArrayConverter}">
+                                        <Binding ElementName="testCaseListView" Path="SelectedItem"/>
+                                        <Binding ElementName="testCaseListView"></Binding>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
+                            <Button Margin="0,0,5,0" Grid.Column="3" HorizontalAlignment="Right" Width="50" Content="Kopyala" Command="{Binding ElementName=wm, Path=DataContext.CommandCopySelectedTestCaseText}" CommandParameter="{Binding ElementName=testCaseListView, Path=SelectedItem}"/>
+                            <Button Margin="0,0,5,0" Grid.Column="4" HorizontalAlignment="Right" Width="50" Content="Sil" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedTestCase}" CommandParameter="{Binding ElementName=testCaseListView, Path=SelectedItem}"/>
+                        </StackPanel>
+                        </GroupBox>
                     </Grid>
                     <ListView Grid.Row="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" SelectedItem="{Binding SelectedTestCase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Wheat" x:Name="testCaseListView" ItemsSource="{Binding SelectedProject.TestCases}">
                         <ie:Interaction.Triggers>
@@ -153,16 +167,6 @@
                                         </Border>
                                         <TextBlock HorizontalAlignment="Stretch" Grid.Column="1" TextWrapping="Wrap" Padding="5,0,0,0" Text="{Binding Description}">
                                         </TextBlock>
-                                        <Button Width="Auto" Margin="0,0,3,0" Grid.Column="2" HorizontalAlignment="Right" Content="Güncelle" Command="{Binding ElementName=wm, Path=DataContext.CommandTestCaseSelectedChanged}" >
-                                            <Button.CommandParameter>
-                                                <MultiBinding Converter="{StaticResource ObjectArrayConverter}">
-                                                    <Binding />
-                                                    <Binding ElementName="testCaseListView"></Binding>
-                                                </MultiBinding>
-                                            </Button.CommandParameter>
-                                        </Button>
-                                        <Button Margin="0,0,3,0" Grid.Column="3" HorizontalAlignment="Right" Width="Auto" Content="Kopyala" Command="{Binding ElementName=wm, Path=DataContext.CommandCopySelectedTestCaseText}" CommandParameter="{Binding}"/>
-                                        <Button Margin="0,0,3,0" Grid.Column="4" HorizontalAlignment="Right" Width="35" Content="Sil" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedTestCase}" CommandParameter="{Binding}"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
@@ -327,7 +331,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        
+
                         <Label Grid.Row="1" VerticalAlignment="Top" Height="30" Content="Proje Adı:" />
                         <TextBox Grid.Row="1" x:Name="txtProjName" Grid.Column="1" VerticalAlignment="Top"  VerticalContentAlignment="Center" Height="30"></TextBox>
                         <local:ImageButton Grid.Row="1" Command="{Binding CommandAddNewTestProject}"
