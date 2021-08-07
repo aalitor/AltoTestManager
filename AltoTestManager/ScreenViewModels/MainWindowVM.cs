@@ -305,6 +305,12 @@ namespace AltoTestManager
         }
         void copySelectedTestCaseText(object obj)
         {
+            if (obj == null)
+            {
+                Notification.Text = "Seçili bir senaryo bulunmamakta";
+                Notification.Type = -1;
+                return;
+            }
             if (obj is TestCase)
             {
                 var sel = (TestCase)obj;
@@ -329,7 +335,11 @@ namespace AltoTestManager
         {
             var arr = (Tuple<TestCase, System.Windows.Controls.ListView>)obj;
             if (arr.Item1 == null)
+            {
+                Notification.Text = "Seçili bir senaryo bulunmamakta";
+                Notification.Type = -1;
                 return;
+            }
             SelectedTestCaseToUpdate = arr.Item1;
             var lv = arr.Item2;
             lv.SelectedItem = SelectedTestCaseToUpdate;
@@ -512,6 +522,12 @@ namespace AltoTestManager
 
         private void deleteSelectedTestCase(object obj)
         {
+            if(obj == null)
+            {
+                Notification.Text = "Seçili bir senaryo bulunmamakta";
+                Notification.Type = -1;
+                return;
+            }
             if (obj is TestCase)
             {
                 var selected = (TestCase)obj;
@@ -715,7 +731,7 @@ namespace AltoTestManager
         {
             var jsondata = JsonConvert.SerializeObject(TestProjects, Formatting.Indented);
             File.WriteAllText(JsonPath, jsondata);
-            
+
         }
         void readJson()
         {

@@ -63,7 +63,7 @@
                                 </ComboBox>
                             </Border>
                         </DockPanel>
-                        <GroupBox Margin="0,5,0,8" Grid.Row="2" Header="Seçili Senaryo İşlemleri">
+                        <GroupBox Margin="0,5,0,8" Grid.Row="2" Header="Seçili Senaryoyu">
                             <StackPanel Margin="0,3,0,3" Height="30" Orientation="Horizontal">
                             <Button Width="50" Margin="0,0,5,0" Grid.Column="2" HorizontalAlignment="Right" Content="Güncelle" Command="{Binding ElementName=wm, Path=DataContext.CommandTestCaseSelectedChanged}" >
                                 <Button.CommandParameter>
