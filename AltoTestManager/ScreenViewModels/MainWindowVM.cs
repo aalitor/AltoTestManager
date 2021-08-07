@@ -426,6 +426,9 @@ namespace AltoTestManager
                         }
                     }
                     oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
                 }
                 oWord.Visible = !WordOpenSaveAsDialog;
                 if (!WordOpenSaveAsDialog)
