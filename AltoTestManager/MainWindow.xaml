@@ -172,11 +172,11 @@
                         <StackPanel>
                             <DockPanel Margin="2,5,5,5" LastChildFill="True">
                                 <Label Content="Description:" FontWeight="Bold"></Label>
-                                <TextBox MaxHeight="100" TextWrapping="Wrap" Text="{Binding SelectedTestCaseToUpdate.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch" x:Name="txtCaseDesc">
-                                    <TextBox.InputBindings>
+                                <TextBox AcceptsReturn="True" MaxHeight="100" TextWrapping="Wrap" Text="{Binding SelectedTestCaseToUpdate.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch" x:Name="txtCaseDesc">
+                                    <!--<TextBox.InputBindings>
                                         <KeyBinding Key="Enter" Command="{Binding CommandAddNewTestCase}" CommandParameter="{Binding ElementName=txtCaseDesc, Path=Text}">
                                         </KeyBinding>
-                                    </TextBox.InputBindings>
+                                    </TextBox.InputBindings>-->
                                 </TextBox>
                             </DockPanel>
                             <DockPanel>
