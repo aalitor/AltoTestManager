@@ -441,21 +441,34 @@ namespace AltoTestManager
                 var num = 1;
                 foreach (var item in proj.TestCases)
                 {
-                    Word.Paragraph oPara1;
-                    oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
-                    oPara1.Range.Text = string.Format("{0}. {1}", num++, item.Description);
+                    var oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
+
+                    var textcolor = item.CaseStatus == TestCaseStatus.Failed ? Word.WdColorIndex.wdRed :
+                        item.CaseStatus == TestCaseStatus.Success ? Word.WdColorIndex.wdGreen
+                        : Word.WdColorIndex.wdBlack;
+
+                    oPara1.Range.Text = string.Format("Senaryo {0}. {1} ", num++, 
+                        item.CaseStatus == TestCaseStatus.Failed ? "Başarısız" :
+                        item.CaseStatus == TestCaseStatus.Success ? "Başarılı" : "Test Edilmedi");
+                    oPara1.Range.Font.ColorIndex = textcolor;
+                    oPara1.Range.InsertParagraphAfter();
+
+                    var oPara2 = oDoc.Content.Paragraphs.Add(ref oMissing); 
+                    oPara2.Range.Font.ColorIndex = Word.WdColorIndex.wdBlack;
+                    oPara2.Range.Text = string.Format("{0}",item.Description);
+
                     foreach (var pic in item.ImagePaths)
                     {
                         if (IsValidPath(pic, false) && File.Exists(pic))
                         {
-                            oPara1.Range.InsertParagraphAfter();
-                            oPara1.Range.InlineShapes.AddPicture(pic);
+                            oPara2.Range.InsertParagraphAfter();
+                            oPara2.Range.InlineShapes.AddPicture(pic);
                         }
                     }
-                    oPara1.Range.InsertParagraphAfter();
-                    oPara1.Range.InsertParagraphAfter();
-                    oPara1.Range.InsertParagraphAfter();
-                    oPara1.Range.InsertParagraphAfter();
+                    oPara2.Range.InsertParagraphAfter();
+                    oPara2.Range.InsertParagraphAfter();
+                    oPara2.Range.InsertParagraphAfter();
+                    oPara2.Range.InsertParagraphAfter();
                 }
                 oWord.Visible = !WordOpenSaveAsDialog;
                 if (!WordOpenSaveAsDialog)

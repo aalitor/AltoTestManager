@@ -5,7 +5,8 @@
         xmlns:conv="clr-namespace:AltoTestManager.Converters"
         xmlns:local="clr-namespace:AltoTestManager"
         Title="Test Manager" Height="600" Width="700"
-        xmlns:ie="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" Icon="img/favicon.ico">
+        xmlns:ie="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" Icon="img/favicon.ico"
+        >
 
     <ie:Interaction.Triggers>
         <ie:EventTrigger EventName="Closing">
