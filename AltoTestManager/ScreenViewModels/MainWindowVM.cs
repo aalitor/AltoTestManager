@@ -21,6 +21,18 @@ namespace AltoTestManager
         private Notification notification;
         private bool isModeUpdate;
 
+        private string cloneButtonContent;
+
+        public string CloneButtonContent
+        {
+            get { return cloneButtonContent; }
+            set
+            {
+                cloneButtonContent = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("CloneButtonContent"));
+            }
+        }
+
 
         public ObservableCollection<TestProject> EditTestProjects { get; set; }
         public Stretch SelectedStretch
@@ -42,6 +54,8 @@ namespace AltoTestManager
             {
                 isPreprodEnvironment = value;
                 updateTestProjectsByEnv();
+                if (isPreprodEnvironment)
+                    CloneButtonContent = "Test Ortamına Klonla";
                 PropertyChanged(this, new PropertyChangedEventArgs("IsPreprodEnvironment"));
             }
         }
@@ -52,6 +66,8 @@ namespace AltoTestManager
             set
             {
                 isTestEnvironment = value;
+                if (isTestEnvironment)
+                    CloneButtonContent = "Preprod Ortamına Klonla";
                 updateTestProjectsByEnv();
                 PropertyChanged(this, new PropertyChangedEventArgs("IsTestEnvironment"));
             }
@@ -306,8 +322,8 @@ namespace AltoTestManager
                     var clonecase = new TestCase(testcase.Description, TestCaseStatus.Untested);
                     cloneproj.TestCases.Add(clonecase);
                 }
-                cloneproj.IsTestEnvironment = AddIsTestEnvironment;
-                cloneproj.IsPreprodEnvironment = AddIsPreprodEnvironment;
+                cloneproj.IsTestEnvironment = IsPreprodEnvironment;
+                cloneproj.IsPreprodEnvironment = IsTestEnvironment;
                 addNewTestProject(cloneproj);
             }
         }
@@ -533,7 +549,7 @@ namespace AltoTestManager
 
         private void deleteSelectedTestCase(object obj)
         {
-            if(obj == null)
+            if (obj == null)
             {
                 Notification.Text = "Seçili bir senaryo bulunmamakta";
                 Notification.Type = -1;
@@ -660,15 +676,16 @@ namespace AltoTestManager
                         AddIsTestEnvironment ? "Test" : "Preprod"));
                     return;
                 }
+
                 foreach (var item in Path.GetInvalidPathChars())
                 {
                     projname = projname.Replace(item.ToString(), "");
                 }
+
                 foreach (var item in Path.GetInvalidFileNameChars())
                 {
                     projname = projname.Replace(item.ToString(), "");
                 }
-                projname += AddIsPreprodEnvironment ? " - PREPROD" : " - TEST";
                 var proj = new TestProject(projname);
                 proj.IsTestEnvironment = AddIsTestEnvironment;
                 proj.IsPreprodEnvironment = AddIsPreprodEnvironment;
@@ -689,11 +706,13 @@ namespace AltoTestManager
                     return;
                 }
 
-                if (EditTestProjects.Any(x => x.Caption.Equals(projname)))
+                if (TestProjects.Any(x => x.Caption.Equals(projname) &&
+                    x.IsPreprodEnvironment == proj.IsPreprodEnvironment &&
+                    x.IsTestEnvironment == proj.IsTestEnvironment))
                 {
                     MessageBox.Show(string.Format(
                         "Aynı isimli bir proje {0} ortamında zaten var, ekleme yapılamaz",
-                        AddIsTestEnvironment ? "Test" : "Preprod"));
+                        proj.IsPreprodEnvironment ? "Preprod" : "Test"));
                     return;
                 }
                 foreach (var item in Path.GetInvalidPathChars())
@@ -704,13 +723,11 @@ namespace AltoTestManager
                 {
                     projname = projname.Replace(item.ToString(), "");
                 }
-                projname += AddIsPreprodEnvironment ? " - PREPROD" : " - TEST";
                 proj.Caption = projname;
-                proj.IsTestEnvironment = AddIsTestEnvironment;
-                proj.IsPreprodEnvironment = AddIsPreprodEnvironment;
                 TestProjects.Add(proj);
 
-                MessageBox.Show(string.Format("{0} projesi eklendi", projname));
+                MessageBox.Show(string.Format("{0} projesi {1} ortamına klonlandı", projname,
+                    proj.IsTestEnvironment ? "test" : "preprod"));
                 projname = "";
                 saveJson();
             }
@@ -774,8 +791,8 @@ namespace AltoTestManager
         void updateEditTestProjectsByEnv()
         {
             EditTestProjects.Clear();
-            foreach (var item in TestProjects.Where(x => x.IsTestEnvironment == AddIsTestEnvironment
-                && x.IsPreprodEnvironment == AddIsPreprodEnvironment))
+            foreach (var item in TestProjects.Where(x => x.IsTestEnvironment == isTestEnvironment
+                && x.IsPreprodEnvironment == isPreprodEnvironment))
             {
                 EditTestProjects.Add(item);
             }

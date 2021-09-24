@@ -49,10 +49,10 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <DockPanel Margin="0,4,0,0">
-                            <RadioButton IsChecked="{Binding IsTestEnvironment, Mode=TwoWay}" Content="Test" VerticalContentAlignment="Center" Height="20" Width="100"/>
-                            <RadioButton IsChecked="{Binding IsPreprodEnvironment, Mode=TwoWay}" Content="Preprod" VerticalContentAlignment="Center" Height="20" Width="100"/>
-                            <Button HorizontalAlignment="Right" Command="{Binding CommandCloneTestProject}" 
-                                CommandParameter="{Binding SelectedProject}" DockPanel.Dock="Right" Height="25" Content="Proje Klonla" />
+                            <RadioButton IsChecked="{Binding IsTestEnvironment, Mode=TwoWay}" Content="Test" VerticalContentAlignment="Center" Height="20" Width="80"/>
+                            <RadioButton IsChecked="{Binding IsPreprodEnvironment, Mode=TwoWay}" Content="Preprod" VerticalContentAlignment="Center" Height="20" Width="80"/>
+                            <Button Width="140" HorizontalAlignment="Right" Command="{Binding CommandCloneTestProject}" 
+                                CommandParameter="{Binding SelectedProject}" DockPanel.Dock="Right" Height="25" Content="{Binding CloneButtonContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                         </DockPanel>
                         <DockPanel Grid.Row="1" LastChildFill="True">
