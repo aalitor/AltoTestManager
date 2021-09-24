@@ -167,7 +167,7 @@ namespace AltoTestManager
         public ObservableCollection<TestProject> TestProjectsByEnv { get; set; }
         public RelayCommand SelectDataPath { get; set; }
         public RelayCommand SelectDataFolder { get; set; }
-
+        public RelayCommand CommandAddNewLine { get; set; }
         public RelayCommand CommandChangeTestCase { get; set; }
         public RelayCommand CommandAddNewTestCase { get; set; }
         public RelayCommand CommandAddNewTestProject { get; set; }
@@ -275,6 +275,7 @@ namespace AltoTestManager
             CommandChangeUpdateMode = new RelayCommand(new Action<object>(changeUpdateMode));
             CommandSaveJson = new RelayCommand(new Action<object>(saveJson));
             CommandTestCaseSelectedChanged = new RelayCommand(new Action<object>(testcaseSelectedChanged));
+            CommandAddNewLine = new RelayCommand(new Action<object>(commandAddNewLineAction));
             SelectedItemChangedCommand = new RelayCommand(new Action<object>((x) =>
             {
                 var lv = (System.Windows.Controls.ListView)x;
@@ -286,6 +287,13 @@ namespace AltoTestManager
                 TestProjects = new ObservableCollection<TestProject>();
             if (string.IsNullOrEmpty(DataFolder))
                 DataFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        }
+
+        private void commandAddNewLineAction(object obj)
+        {
+            var txtbox = (System.Windows.Controls.TextBox)obj;
+            txtbox.AppendText(Environment.NewLine);
+            txtbox.CaretIndex = Int32.MaxValue;
         }
         void cloneTestProject(object obj)
         {
