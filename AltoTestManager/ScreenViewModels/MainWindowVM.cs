@@ -303,6 +303,9 @@ namespace AltoTestManager
                 TestProjects = new ObservableCollection<TestProject>();
             if (string.IsNullOrEmpty(DataFolder))
                 DataFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            updateTestProjectsByEnv();
+            updateEditTestProjectsByEnv();
         }
 
         private void commandAddNewLineAction(object obj)
@@ -782,8 +785,8 @@ namespace AltoTestManager
         void updateTestProjectsByEnv()
         {
             TestProjectsByEnv.Clear();
-            foreach (var item in TestProjects.Where(x => x.IsTestEnvironment == IsTestEnvironment
-                && x.IsPreprodEnvironment == IsPreprodEnvironment))
+            foreach (var item in TestProjects.Where(x => x.IsTestEnvironment == isTestEnvironment
+                && x.IsPreprodEnvironment == isPreprodEnvironment))
             {
                 TestProjectsByEnv.Add(item);
             }
