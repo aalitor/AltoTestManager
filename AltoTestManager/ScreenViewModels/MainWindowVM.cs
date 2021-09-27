@@ -187,6 +187,7 @@ namespace AltoTestManager
         public RelayCommand CommandChangeTestCase { get; set; }
         public RelayCommand CommandAddNewTestCase { get; set; }
         public RelayCommand CommandAddNewTestProject { get; set; }
+        public RelayCommand UpdateProgramCommand { get; set; }
         public RelayCommand CommandDeleteTestProject { get; set; }
         private TestProject selectedTestProject;
         private string selectedImagePath;
@@ -292,6 +293,7 @@ namespace AltoTestManager
             CommandSaveJson = new RelayCommand(new Action<object>(saveJson));
             CommandTestCaseSelectedChanged = new RelayCommand(new Action<object>(testcaseSelectedChanged));
             CommandAddNewLine = new RelayCommand(new Action<object>(commandAddNewLineAction));
+            UpdateProgramCommand = new RelayCommand(new Action<object>(updateProgramCommandAction));
             SelectedItemChangedCommand = new RelayCommand(new Action<object>((x) =>
             {
                 var lv = (System.Windows.Controls.ListView)x;
@@ -306,6 +308,12 @@ namespace AltoTestManager
 
             updateTestProjectsByEnv();
             updateEditTestProjectsByEnv();
+        }
+
+        private void updateProgramCommandAction(object obj)
+        {
+            Process.Start("updater.exe");
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void commandAddNewLineAction(object obj)

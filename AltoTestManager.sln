@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltoTestManager", "AltoTestManager\AltoTestManager.csproj", "{7D483636-D502-4AFF-941D-A33A02362CA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "updater", "updater\updater.csproj", "{75EBE148-A4C3-4101-87AF-CA6CD4667FFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{7D483636-D502-4AFF-941D-A33A02362CA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D483636-D502-4AFF-941D-A33A02362CA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D483636-D502-4AFF-941D-A33A02362CA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75EBE148-A4C3-4101-87AF-CA6CD4667FFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75EBE148-A4C3-4101-87AF-CA6CD4667FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75EBE148-A4C3-4101-87AF-CA6CD4667FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75EBE148-A4C3-4101-87AF-CA6CD4667FFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

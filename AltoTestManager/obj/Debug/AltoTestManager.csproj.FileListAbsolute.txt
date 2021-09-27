@@ -32,3 +32,5 @@ C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestMan
 C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\ru\System.Windows.Interactivity.resources.dll
 C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
 C:\Users\PCDFN\documents\visual studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\AltoHttp.dll
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\AltoTestManager\bin\Debug\System.IO.Compression.ZipFile.dll

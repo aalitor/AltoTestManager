@@ -385,6 +385,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel Margin="3,3,3,0" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2">
@@ -393,7 +394,8 @@
                     <Button Padding="3" Content="Klasör Seç" Command="{Binding SelectDataFolder}" Height="30" Margin="4,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
                 <CheckBox Margin="3,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" IsChecked="{Binding WordOpenSaveAsDialog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Word dosyasını farklı kaydet" Grid.ColumnSpan="2" />
-                <StackPanel Margin="1,10,0,0"   Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                <Button Margin="1,10,0,0"  Content="Update Program" HorizontalAlignment="Left" Width="120" Grid.ColumnSpan="2" Command="{Binding UpdateProgramCommand}" Grid.Row="2"/>
+                <StackPanel Margin="1,10,0,0"   Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2">
                     <Label  Content="Görsel boyutu"/>
                     <ComboBox Width="200" ItemsSource="{Binding StretchEnumList}" SelectedItem="{Binding SelectedStretch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               />
