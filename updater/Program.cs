@@ -23,9 +23,17 @@ namespace updater
             var downloader = new HttpDownloader(url, zipPath);
             downloader.DownloadCompleted += downloader_DownloadCompleted;
             downloader.ProgressChanged += downloader_ProgressChanged;
+            downloader.ErrorOccured += downloader_ErrorOccured;
             downloader.Start();
 
             Console.ReadLine();
+
+        }
+
+        static void downloader_ErrorOccured(object sender, ErrorEventArgs e)
+        {
+            Console.WriteLine(e.GetException().Message);
+            Console.WriteLine(e.GetException().StackTrace);
 
         }
 
