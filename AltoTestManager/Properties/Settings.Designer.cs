@@ -70,5 +70,17 @@ namespace AltoTestManager.Properties {
                 this["StretchType"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string UpdaterPath {
+            get {
+                return ((string)(this["UpdaterPath"]));
+            }
+            set {
+                this["UpdaterPath"] = value;
+            }
+        }
     }
 }

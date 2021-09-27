@@ -46,6 +46,17 @@ namespace AltoTestManager
         }
         private bool isTestEnvironment;
         private bool isPreprodEnvironment;
+        private string updaterPath;
+
+        public string UpdaterPath
+        {
+            get { return Properties.Settings.Default.UpdaterPath; }
+            set
+            {
+                Properties.Settings.Default.UpdaterPath = value;
+                Properties.Settings.Default.Save();
+            }
+        }
 
         public bool IsPreprodEnvironment
         {
@@ -312,7 +323,7 @@ namespace AltoTestManager
 
         private void updateProgramCommandAction(object obj)
         {
-            Process.Start("updater.exe");
+            Process.Start(UpdaterPath);
             System.Windows.Application.Current.Shutdown();
         }
 
@@ -455,15 +466,15 @@ namespace AltoTestManager
                         item.CaseStatus == TestCaseStatus.Success ? Word.WdColorIndex.wdGreen
                         : Word.WdColorIndex.wdBlack;
 
-                    oPara1.Range.Text = string.Format("Senaryo {0}. {1} ", num++, 
+                    oPara1.Range.Text = string.Format("Senaryo {0}. {1} ", num++,
                         item.CaseStatus == TestCaseStatus.Failed ? "Başarısız" :
                         item.CaseStatus == TestCaseStatus.Success ? "Başarılı" : "Test Edilmedi");
                     oPara1.Range.Font.ColorIndex = textcolor;
                     oPara1.Range.InsertParagraphAfter();
 
-                    var oPara2 = oDoc.Content.Paragraphs.Add(ref oMissing); 
+                    var oPara2 = oDoc.Content.Paragraphs.Add(ref oMissing);
                     oPara2.Range.Font.ColorIndex = Word.WdColorIndex.wdBlack;
-                    oPara2.Range.Text = string.Format("{0}",item.Description);
+                    oPara2.Range.Text = string.Format("{0}", item.Description);
 
                     foreach (var pic in item.ImagePaths)
                     {

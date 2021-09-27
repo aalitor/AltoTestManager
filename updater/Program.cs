@@ -15,7 +15,6 @@ namespace updater
         static string url = "https://codeload.github.com/aalitor/AltoTestManager/zip/refs/heads/main";
         static string appPath = Path.Combine(path, "app");
 
-
         static void Main(string[] args)
         {
             Console.WriteLine("Downloading package...");
@@ -27,7 +26,6 @@ namespace updater
             downloader.Start();
 
             Console.ReadLine();
-
         }
 
         static void downloader_ErrorOccured(object sender, ErrorEventArgs e)
