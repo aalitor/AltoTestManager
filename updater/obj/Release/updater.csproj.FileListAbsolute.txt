@@ -1,0 +1,10 @@
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\updater\bin\Release\updater.exe.config
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\updater\bin\Release\updater.exe
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\updater\bin\Release\updater.pdb
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\updater\bin\Release\AltoHttp.dll
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\updater\bin\Release\Newtonsoft.Json.dll
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\updater\bin\Release\System.IO.Compression.ZipFile.dll
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\updater\bin\Release\Newtonsoft.Json.xml
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\updater\obj\Release\updater.csprojResolveAssemblyReference.cache
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\updater\obj\Release\updater.exe
+C:\Users\PCDFN\Documents\Visual Studio 2013\Projects\AltoTestManager\updater\obj\Release\updater.pdb
