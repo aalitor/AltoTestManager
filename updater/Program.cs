@@ -41,20 +41,10 @@ namespace updater
 
         static void downloader_DownloadCompleted(object sender, EventArgs e)
         {
+            Console.WriteLine("Deleting existing app... " + appPath);
+            Directory.Delete(Path.Combine(appPath, "AltoTestManager-main"));
             Console.WriteLine("Extracting package... " + appPath);
-            try
-            {
-                using (var strm = File.OpenRead(zipPath))
-                using (ZipArchive a = new ZipArchive(strm))
-                {
-                    ExtractToDirectory(a, appPath, true);
-                }
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
-            }
+            System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, appPath);
 
             Console.WriteLine("Done");
         }
