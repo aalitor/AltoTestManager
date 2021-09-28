@@ -42,7 +42,7 @@ namespace updater
         static void downloader_DownloadCompleted(object sender, EventArgs e)
         {
             Console.WriteLine("Deleting existing app... " + appPath);
-            Directory.Delete(Path.Combine(appPath, "AltoTestManager-main"));
+            Directory.Delete(Path.Combine(appPath, "AltoTestManager-main"), true);
             Console.WriteLine("Extracting package... " + appPath);
             System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, appPath);
 
