@@ -483,7 +483,7 @@ namespace AltoTestManager
                     oPara2.Range.Text = string.Format("{0}", item.Description);
 
                     oPara2.Range.InsertParagraphAfter();
-
+                    oPara2.Range.Font.ColorIndex = Word.WdColorIndex.wdBlack;
                     oPara2.Range.Text = item.TestData;
 
                     foreach (var pic in item.ImagePaths)

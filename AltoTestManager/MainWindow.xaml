@@ -321,11 +321,8 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                            <TextBox Background="LightBlue" Name="txtTestData" Grid.Column="1" AcceptsReturn="False" TextWrapping="Wrap" Text="{Binding SelectedTestCase.TestData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch" >
-                                <TextBox.InputBindings>
-                                    <KeyBinding Key="Enter" Command="{Binding CommandAddNewLine}" CommandParameter="{Binding ElementName=txtTestData}">
-                                    </KeyBinding>
-                                </TextBox.InputBindings>
+                            <TextBox Background="LightBlue" Name="txtTestData" Grid.Column="1" AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding SelectedTestCase.TestData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch" >
+                                
                             </TextBox>
                         </Grid>
                     </GroupBox>
