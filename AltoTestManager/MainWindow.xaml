@@ -311,7 +311,9 @@
                                                     <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Kopyala" HorizontalAlignment="Right" Width="50" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandCopyImageToClipboard}" CommandParameter="{Binding}" />
 
                                                     <Border VerticalAlignment="Center">
-                                                        <TextBlock   VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Text="{Binding}" Height="20" ></TextBlock>
+                                                        <TextBlock   VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Text="{Binding}" Height="20" >
+
+                                                        </TextBlock>
                                                     </Border>
                                                 </DockPanel>
                                             </Border>
@@ -319,7 +321,11 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                            <TextBox Background="LightBlue" Grid.Column="1" AcceptsReturn="False" TextWrapping="Wrap" Text="{Binding SelectedTestCase.TestData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch" >
+                            <TextBox Background="LightBlue" Name="txtTestData" Grid.Column="1" AcceptsReturn="False" TextWrapping="Wrap" Text="{Binding SelectedTestCase.TestData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch" >
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Enter" Command="{Binding CommandAddNewLine}" CommandParameter="{Binding ElementName=txtTestData}">
+                                    </KeyBinding>
+                                </TextBox.InputBindings>
                             </TextBox>
                         </Grid>
                     </GroupBox>
