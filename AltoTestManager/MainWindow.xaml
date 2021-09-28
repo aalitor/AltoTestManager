@@ -282,37 +282,46 @@
                     </Border>
                     <Button Grid.Row="1" Command="{Binding CommandGetImageFromClipboard}" CommandParameter="{x:Null}" Content="Görseli Panodan Al" />
                     <GroupBox  Grid.Row="2" Header="Görseller">
-                        <ListView x:Name="listv"  Margin="0,5,4,0"  ScrollViewer.CanContentScroll="True" SelectedItem="{Binding SelectedImagePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Wheat"  ItemsSource="{Binding SelectedTestCase.ImagePaths}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                            <ListView.Template>
-                                <ControlTemplate>
-                                    <ScrollViewer>
-                                        <ItemsPresenter></ItemsPresenter>
-                                    </ScrollViewer>
-                                </ControlTemplate>
-                            </ListView.Template>
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Background="Transparent">
-                                        <Grid.InputBindings>
-                                            <MouseBinding MouseAction="LeftDoubleClick"
+                            <ListView  x:Name="listv"  Margin="0,5,4,0"  ScrollViewer.CanContentScroll="True" SelectedItem="{Binding SelectedImagePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Wheat"  ItemsSource="{Binding SelectedTestCase.ImagePaths}">
+
+                                <ListView.Template>
+                                    <ControlTemplate>
+                                        <ScrollViewer>
+                                            <ItemsPresenter></ItemsPresenter>
+                                        </ScrollViewer>
+                                    </ControlTemplate>
+                                </ListView.Template>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Background="Transparent">
+                                            <Grid.InputBindings>
+                                                <MouseBinding MouseAction="LeftDoubleClick"
                                                           Command="{Binding ElementName=wm, Path=DataContext.CommandShowLargeImageWindow}"
                                                           CommandParameter="{Binding}"></MouseBinding>
-                                        </Grid.InputBindings>
-                                        <Border Padding="3" HorizontalAlignment="Stretch" BorderBrush="LightBlue" BorderThickness="1">
-                                            <DockPanel LastChildFill="True">
-                                                <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Sil" HorizontalAlignment="Right" Width="20" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedImagePath}" CommandParameter="{Binding}" />
-                                                <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Kopyala" HorizontalAlignment="Right" Width="50" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandCopyImageToClipboard}" CommandParameter="{Binding}" />
+                                            </Grid.InputBindings>
+                                            <Border Padding="3" HorizontalAlignment="Stretch" BorderBrush="LightBlue" BorderThickness="1">
+                                                <DockPanel LastChildFill="True">
+                                                    <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Sil" HorizontalAlignment="Right" Width="20" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandDeleteSelectedImagePath}" CommandParameter="{Binding}" />
+                                                    <Button Margin="0,0,5,0" VerticalAlignment="Center" Content="Kopyala" HorizontalAlignment="Right" Width="50" Height="20" Command="{Binding ElementName=wm, Path=DataContext.CommandCopyImageToClipboard}" CommandParameter="{Binding}" />
 
-                                                <Border VerticalAlignment="Center">
-                                                    <TextBlock   VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Text="{Binding}" Height="20" ></TextBlock>
-                                                </Border>
-                                            </DockPanel>
-                                        </Border>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                                                    <Border VerticalAlignment="Center">
+                                                        <TextBlock   VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Text="{Binding}" Height="20" ></TextBlock>
+                                                    </Border>
+                                                </DockPanel>
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <TextBox Background="LightBlue" Grid.Column="1" AcceptsReturn="False" TextWrapping="Wrap" Text="{Binding SelectedTestCase.TestData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch" >
+                            </TextBox>
+                        </Grid>
                     </GroupBox>
                 </Grid>
             </Grid>

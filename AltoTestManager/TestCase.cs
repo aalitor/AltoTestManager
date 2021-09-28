@@ -39,12 +39,27 @@ namespace AltoTestManager
             }
         }
 
+        private string testData;
 
-        public TestCase(string description, TestCaseStatus status = TestCaseStatus.Untested)
+        public string TestData
+        {
+            get { return testData; }
+            set
+            {
+                if (value != testData)
+                {
+                    testData = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("TestData"));
+                }
+            }
+        }
+
+        public TestCase(string description, string testData, TestCaseStatus status = TestCaseStatus.Untested)
         {
             ImagePaths = new ObservableCollection<string>();
             this.Description = description;
             this.CaseStatus = status;
+            this.TestData = testData;
         }
 
 

@@ -245,7 +245,7 @@ namespace AltoTestManager
             {
                 selectedTestProject = value;
                 IsModeUpdate = false;
-                SelectedTestCaseToUpdate = new TestCase("");
+                SelectedTestCaseToUpdate = new TestCase("", "");
                 PropertyChanged(this, new PropertyChangedEventArgs("SelectedProject"));
 
             }
@@ -305,6 +305,7 @@ namespace AltoTestManager
             CommandTestCaseSelectedChanged = new RelayCommand(new Action<object>(testcaseSelectedChanged));
             CommandAddNewLine = new RelayCommand(new Action<object>(commandAddNewLineAction));
             UpdateProgramCommand = new RelayCommand(new Action<object>(updateProgramCommandAction));
+            PropertyChanged += MainWindowVM_PropertyChanged;
             SelectedItemChangedCommand = new RelayCommand(new Action<object>((x) =>
             {
                 var lv = (System.Windows.Controls.ListView)x;
@@ -319,6 +320,11 @@ namespace AltoTestManager
 
             updateTestProjectsByEnv();
             updateEditTestProjectsByEnv();
+        }
+
+        void MainWindowVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            saveJson();
         }
 
         private void updateProgramCommandAction(object obj)
@@ -341,7 +347,7 @@ namespace AltoTestManager
                 var cloneproj = new TestProject(sel.Caption);
                 foreach (var testcase in sel.TestCases)
                 {
-                    var clonecase = new TestCase(testcase.Description, TestCaseStatus.Untested);
+                    var clonecase = new TestCase(testcase.Description, testcase.TestData, TestCaseStatus.Untested);
                     cloneproj.TestCases.Add(clonecase);
                 }
                 cloneproj.IsTestEnvironment = IsPreprodEnvironment;
@@ -394,7 +400,7 @@ namespace AltoTestManager
         private void changeUpdateMode(object obj)
         {
             IsModeUpdate = false;
-            SelectedTestCaseToUpdate = new TestCase("");
+            SelectedTestCaseToUpdate = new TestCase("", "");
         }
 
         private void showLargeImageWindow(object obj)
@@ -652,7 +658,7 @@ namespace AltoTestManager
                     Notification.Type = -1;
                     return;
                 }
-                var testcase = new TestCase(caseDesc, TestCaseStatus.Untested);
+                var testcase = new TestCase(caseDesc, "", TestCaseStatus.Untested);
                 SelectedProject.TestCases.Add(testcase);
                 saveJson();
             }
@@ -832,5 +838,7 @@ namespace AltoTestManager
                 EditTestProjects.Add(item);
             }
         }
+
+
     }
 }
